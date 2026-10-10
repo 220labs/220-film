@@ -1,0 +1,8 @@
+# Credits switches for scripts/cut.py's roll. Flip a value by pull request; the roll re-renders on
+# the next run (this file's content is part of the roll's cache key). Logos are PNGs under
+# $WORK/logos/ (binaries stay out of git); the roll line "@logo <name>" places one.
+logos:
+  spacesheep:
+    show: false            # true once the logo file is in place and spacesheep.dev has said yes
+    file: logos/spacesheep.png
+    height: 140

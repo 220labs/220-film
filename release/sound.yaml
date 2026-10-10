@@ -1,0 +1,7 @@
+# Dialogue pass on every clip's sound for scripts/cut.py. Flip `voice` by pull request; every clip re-renders.
+# Cards and music are untouched; the film is still levelled to -14 LUFS at the end. Ilya heard the options as one
+# A/B file (each spot: original, then V1, then V2). Model files live in $WORK/sound/.
+voice: V1
+chains:
+  V1: "highpass=f=90,lowpass=f=9000,afftdn=nr=14:nf=-32:tn=1,speechnorm=e=8:r=0.0004:l=1"            # FFT denoise + speech leveller
+  V2: "highpass=f=90,arnndn=m='{work}/sound/cb.rnnn':mix=0.85,acompressor=threshold=-26dB:ratio=3:attack=5:release=150:makeup=6"  # neural denoise + compressor

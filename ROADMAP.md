@@ -5,8 +5,8 @@ Steps, not dates. Each one is done when it is published here.
 ## v0.1
 
 The recipe and the credits: the cut lists, the render scripts, the music prompts and
-`CREDITS.yaml`. It is tagged at the first publish. v0.1 is the version that premiered on
-2026-10-09.
+`CREDITS.yaml`. It is tagged at the first publish and premieres on Saturday 2026-10-10. v0.0 is
+the version that premiered on 2026-10-09.
 
 ## Next, unversioned
 

@@ -1,0 +1,527 @@
+# 220 — the clean edition, for YouTube. Rendered by scripts/cut.py (see the README).
+# Machine lines are verbatim from the agents' sessions of 2026-10-08, each with its real time;
+# "…" marks an excerpt. Some clips are held back; the production's records say which and why.
+
+# ---------- COLD OPEN ----------
+- machine:
+    - {t: "09:27", who: "Ilya", text: "done - the brief needs a redesign."}
+    - {t: "09:29", who: "dispatch", text: "You are an unattended session started by dispatch on iMacBook at 2026-10-08 09:29 PDT"}
+    - {t: "09:29", who: "dispatch", text: "… nobody is watching, so decide from the brief and do not ask."}
+  dur: 12
+  size: 52
+  source: "laptop session transcript, dispatch preamble · 2026-10-08 · verbatim"
+  music: {file: music/music-A-night-v1-t1.m4a, at: 2.00, gain: -4.7, credit: "♪ AI-generated stand-in · Google Flow Music"}
+- clip: IMG_5781
+  in: 8.9
+  out: 19.6
+  label: "10:31"
+- card: "220"
+  kind: title
+  dur: 3.5
+  music: {file: music/music-S-stings-v2-t1.m4a, at: 2.5, gain: -0.7, fade: 0.6}
+- card: "AN AI AUTOBIOGRAPHY"
+  kind: chapter
+  small: "A film about AI, edited by AI. The AI in it is real."
+  dur: 4.5
+  music: {file: music/music-S-stings-v2-t1.m4a, at: 83.5, gain: -0.7, fade: 0.6}
+
+# ---------- PROLOGUE ----------
+- card: "Prologue\nin which the machines work through the night"
+  dur: 3.5
+  music: {file: music/music-S-stings-v2-t1.m4a, at: 23.0, gain: -0.7, fade: 0.6}
+- machine:
+    - {t: "00:08", who: "orchestrator", text: "two landed 🚢🚢"}
+    - {t: "01:00", who: "a session", text: "ILYA, IT'S FINE — THIS SESSION IS REALLY DONE. YOU HAVEN'T FORGOTTEN ANYTHING."}
+    - {t: "01:04", who: "autofinish", text: "ILYA, THIS SESSION IS DONE — BUT READ THE NOTE ABOVE BEFORE YOU CLOSE IT."}
+  dur: 11
+  source: "laptop session transcripts and autofinish log · 2026-10-08 · verbatim"
+  music: {file: music/music-A-night-v1-t1.m4a, at: 14.00, gain: -4.7, credit: "♪ AI-generated stand-in · Google Flow Music"}
+- machine:
+    - {t: "07:17", who: "orchestrator", text: "Keep the laptop on power; everything else goes on."}
+    - {t: "08:02", who: "Ilya", text: "can this session be closed?"}
+    - {t: "08:02", who: "Claude", text: "Yes, you can close it."}
+    - {t: "08:26", who: "orchestrator", text: "I was wrong about `domains`: it doesn't block landings."}
+  dur: 11
+  source: "laptop session transcripts · 2026-10-08 · verbatim"
+  music: {file: music/music-A-night-v1-t1.m4a, at: 25.00, gain: -4.7, credit: "♪ AI-generated stand-in · Google Flow Music"}
+
+# ---------- CHAPTER ONE ----------
+- card: "Chapter one\nin which three friends go to NASA"
+  dur: 3.5
+  music: {file: music/music-S-stings-v2-t1.m4a, at: 86.25, gain: -0.7, fade: 0.6}
+- clip: video-8635_singular_display
+  in: 11.95
+  out: 28.1
+  label: "09:15"
+- clip: video-8635_singular_display
+  in: 68.5
+  out: 76.4
+  label: "09:16"
+- clip: video-8635_singular_display
+  in: 81.5
+  out: 100.3
+  label: "09:16"
+- clip: video-8635_singular_display
+  in: 133
+  out: 138
+  label: "09:17"
+- machine:
+    - {t: "09:45", who: "autofinish", text: "API Error: No response from API (waited 3m, then 10m on the retry)."}
+    - {t: "09:50", who: "orchestrator", text: "… the API stopped answering for 13 minutes"}
+  dur: 7
+  size: 52
+  source: "autofinish log, orchestrator transcript · verbatim"
+  music: {file: music/music-B-outage-v1-t1.m4a, at: 1.00, gain: -4.5, credit: "♪ AI-generated stand-in · Google Flow Music"}
+- clip: IMG_5770
+  in: 153.9
+  out: 160.5
+  label: "10:05"
+- clip: IMG_5770
+  in: 0
+  out: 23.7
+  label: "10:03"
+- clip: IMG_5770
+  in: 511.4
+  out: 527.6
+  label: "10:11"
+- clip: IMG_5771
+  in: 2.1
+  out: 4.1
+  label: "10:14"
+- clip: IMG_5771
+  in: 7.15
+  out: 20.0
+  label: "10:14"
+- clip: IMG_5774
+  in: 0
+  out: 11.4
+  label: "10:16"
+
+# ---------- CHAPTER TWO ----------
+- card: "Chapter two\nin which Google makes a cloud indoors"
+  dur: 3.5
+  music: {file: music/music-S-stings-v2-t1.m4a, at: 35.0, gain: -0.7, fade: 0.6}
+- clip: IMG_5779
+  in: 0
+  out: 3.6
+  label: "10:27"
+- clip: IMG_5779
+  in: 115.76
+  out: 131
+  label: "10:29"
+  subs_to: 127.8
+- clip: IMG_5780
+  in: 0
+  out: 6.4
+  label: "10:31"
+- clip: IMG_5781
+  in: 0
+  out: 8.4
+  label: "10:31"
+- clip: IMG_5785
+  in: 42.1
+  out: 54
+  label: "10:47"
+- clip: IMG_5786
+  in: 150
+  out: 161.2
+  label: "10:57"
+- machine:
+    - {t: "10-07 20:39", who: "Aurora", text: "Dream — 2026-10-07 (301 sessions, 1,145 prompts, 10 days)"}
+    - {t: "10-07 20:39", who: "Aurora", text: "A third line of prose is not a mechanism."}
+  dur: 8
+  size: 52
+  source: "_personal dreams/2026-10-07.md · verbatim"
+  music: {file: music/music-C-waiting-v1-t1.m4a, at: 1.00, gain: -0.8, credit: "♪ AI-generated stand-in · Google Flow Music"}
+- machine:
+    - {t: "10:31", who: "Ilya", text: "I don't see anything on desktop 5, can you check?"}
+    - {t: "10:40", who: "Ilya", text: "any updates?"}
+    - {t: "10:46", who: "autofinish", text: "API Error: Connection refused — a firewall or proxy may be blocking it (ECONNREFUSED)"}
+    - {t: "10:54", who: "Ilya", text: "any updates?"}
+    - {t: "10:57", who: "a session", text: "ILYA, THIS SESSION MOVED TO ISTUDIO — CLOSE THIS TAB. THE WORK CONTINUES THERE."}
+    - {t: "10:58", who: "orchestrator", text: "The network has been the problem this morning, not the work"}
+  dur: 17
+  size: 40
+  source: "laptop session transcripts and autofinish log · verbatim"
+  music: {file: music/music-B-outage-v1-t1.m4a, at: 8.00, gain: -4.5, credit: "♪ AI-generated stand-in · Google Flow Music"}
+# ---------- CHAPTER THREE ----------
+- card: "Chapter three\nin which everyone is selling something"
+  dur: 3.5
+  music: {file: music/music-S-stings-v2-t1.m4a, at: 47.0, gain: -0.7, fade: 0.6}
+- machine:
+    - {t: "11:27", who: "commit", text: "wip: daily-brief redesign, left uncommitted when its run lost the network (ENOTFOUND, 11:2x)"}
+    - {t: "11:29", who: "Ilya", text: "is it running?"}
+    - {t: "11:29", who: "Claude", text: "Nothing on this side can send it."}
+  dur: 10
+  source: "_coding@ef43739, laptop session transcript · verbatim"
+  music: {file: music/music-B-outage-v1-t1.m4a, at: 25.00, gain: -4.5, credit: "♪ AI-generated stand-in · Google Flow Music"}
+- clip: video-8854_singular_display
+  in: 58
+  out: 101
+  label: "11:51"
+- clip: IMG_5800
+  in: 0
+  out: 49
+  label: "12:00"
+- clip: IMG_5804
+  in: 0
+  out: 46
+  label: "12:14"
+- clip: IMG_5804
+  in: 100
+  out: 136
+  label: "12:15"
+- clip: IMG_5804
+  in: 268
+  out: 300
+  label: "12:18"
+- machine:
+    - {t: "12:37", who: "commit, ffpp/pipeline", text: "Autofinish: \"all\" here — rule E, any text diff once 5 sweep runs have landed since the first arm"}
+    - {t: "12:38", who: "a session", text: "the hook denied that whole command, heredoc included"}
+    - {t: "12:44", who: "orchestrator", text: "Its claude is still running `/finish`, now without a record or a lock."}
+  dur: 11
+  source: "ffpp/pipeline@2d4640d, laptop session transcripts · verbatim"
+  music: {file: music/music-C-waiting-v1-t1.m4a, at: 9.00, gain: -0.8, credit: "♪ AI-generated stand-in · Google Flow Music"}
+
+# ---------- CHAPTER FOUR ----------
+- card: "Chapter four\nin which the lab teaches them to copy and paste"
+  dur: 3.5
+  music: {file: music/music-S-stings-v2-t1.m4a, at: 12.0, gain: -0.7, fade: 0.6}
+- clip: IMG_5808
+  in: 0
+  out: 12
+  label: "13:09"
+- clip: IMG_5813
+  in: 12.2
+  out: 42.2
+  label: "13:26"
+- clip: IMG_5813
+  in: 102.3
+  out: 128.1
+  label: "13:27"
+- clip: IMG_5813
+  in: 236.5
+  out: 255.6
+  label: "13:30"
+- clip: video-8861_singular_display
+  in: 0
+  out: 34.9
+  label: "13:33"
+- machine:
+    - {t: "13:07", who: "orchestrator", text: "ILYA, THIS SESSION IS WAITING FOR YOU — the daily brief, 3 decisions"}
+    - {t: "13:24", who: "orchestrator", text: "ILYA, THIS SESSION IS WAITING FOR YOU — the daily brief, 3 decisions"}
+    - {t: "13:37", who: "orchestrator", text: "ILYA, THIS SESSION IS WAITING FOR YOU — the daily brief, 3 decisions"}
+    - {t: "14:07", who: "orchestrator", text: "ILYA, THIS SESSION IS WAITING FOR YOU — the daily brief, 3 decisions"}
+    - {t: "14:13", who: "orchestrator", text: "ILYA, THIS SESSION IS WAITING FOR YOU — the daily brief, 3 decisions"}
+    - {t: "14:17", who: "orchestrator", text: "ILYA, THIS SESSION IS WAITING FOR YOU — the daily brief, 3 decisions"}
+  dur: 9
+  size: 36
+  source: "orchestrator transcript · six times · verbatim"
+  music: {file: music/music-C-waiting-v1-t1.m4a, at: 20.00, gain: -0.8, credit: "♪ AI-generated stand-in · Google Flow Music"}
+- clip: IMG_5814
+  in: 241.3
+  out: 252.1
+  label: "13:40"
+- clip: IMG_5814
+  in: 271.2
+  out: 293.9
+  label: "13:41"
+- clip: IMG_5814
+  in: 355.8
+  out: 360
+  label: "13:42"
+- clip: IMG_5814
+  in: 468.7
+  out: 496.7
+  label: "13:44"
+- machine:
+    - {t: "09:29", who: "dispatch", text: "… nobody is watching, so decide from the brief and do not ask."}
+  dur: 4
+  size: 52
+  source: "dispatch preamble · verbatim"
+  music: {file: music/music-C-waiting-v1-t1.m4a, at: 29.00, gain: -0.8, credit: "♪ AI-generated stand-in · Google Flow Music"}
+- clip: IMG_5814
+  in: 524
+  out: 566
+  subs_file: slices/IMG_5814@496.json
+  subs_offset: 496
+  label: "13:45"
+
+# ---------- CHAPTER FIVE ----------
+- card: "Chapter five\nin which a breaker is built in 29 minutes"
+  dur: 3.5
+  music: {file: music/music-S-stings-v2-t1.m4a, at: 59.0, gain: -0.7, fade: 0.6}
+- clip: IMG_5831
+  in: 0
+  out: 26
+  label: "14:22"
+- clip: IMG_5832
+  in: 0
+  out: 35
+  label: "14:23"
+- clip: IMG_5836
+  in: 0
+  out: 43.4
+  label: "14:33"
+- machine:
+    - {t: "14:44", who: "builder", text: "Fanning out five `worker` agents (Sonnet), one per area, each in its own worktree"}
+    - {t: "14:49", who: "builder", text: "Every worker is back with green tests."}
+    - {t: "14:49", who: "builder", text: "All 41 tests pass across the merged branches."}
+  dur: 10
+  source: "builder session transcript · verbatim"
+  music: {file: music/music-D-breaker-v1-t1.m4a, at: 0.50, gain: -5.2, credit: "♪ AI-generated stand-in · Google Flow Music"}
+- machine:
+    - {t: "14:47", who: "a session, to builder", text: "Coordinate model-gateway demo with builder"}
+  dur: 4
+  size: 52
+  source: "launch session transcript · one Claude messages another · verbatim"
+  music: {file: music/music-D-breaker-v1-t1.m4a, at: 10.50, gain: -5.2, credit: "♪ AI-generated stand-in · Google Flow Music"}
+- clip: IMG_5838
+  in: 0
+  out: 48.7
+  label: "14:57"
+- machine:
+    - {t: "14:57", who: "builder", text: "I built Agent Gateway, an open-source gateway that protects AI agents from rogue prompts, in about 15 minutes."}
+    - {t: "14:57", who: "Stop hook", text: "… that will not open"}
+    - {t: "14:57", who: "builder", text: "The two links in my last reply won't open as written."}
+    - {t: "14:57", who: "Ilya", text: "Are you on track to finish? When done, put it on GitHub"}
+  dur: 13
+  size: 40
+  source: "builder session transcript · verbatim"
+  music: {file: music/music-D-breaker-v1-t1.m4a, at: 14.50, gain: -5.2, credit: "♪ AI-generated stand-in · Google Flow Music"}
+- machine:
+    - {t: "14:59", who: "README", text: "built as a joke during a Google AI event. The joke is that it works"}
+    - {t: "15:03", who: "Ilya", text: "push everything you need, don't ask me"}
+    - {t: "15:03", who: "builder", text: "Ilya, you've authorized the pushes."}
+    - {t: "15:06", who: "builder", text: "I renamed the gateway to **breaker**"}
+  dur: 12
+  size: 42
+  source: "builder session transcript · verbatim"
+  music: {file: music/music-D-breaker-v1-t1.m4a, at: 27.50, gain: -5.2, credit: "♪ AI-generated stand-in · Google Flow Music"}
+- machine:
+    - {t: "15:08:14", who: "Ilya", text: "merge yourself!"}
+    - {t: "15:08:54", who: "builder", text: "🚢 Merged."}
+  dur: 6
+  size: 64
+  source: "builder session transcript · verbatim"
+  music: {file: music/music-D-breaker-v1-t1.m4a, at: 39.50, gain: -5.2, credit: "♪ AI-generated stand-in · Google Flow Music"}
+- machine:
+    - {t: "15:10", who: "builder", text: "Making a repo public isn't something I'll do on a relayed message"}
+  dur: 5
+  size: 52
+  source: "builder session transcript · verbatim"
+  music: {file: music/music-D-breaker-v1-t1.m4a, at: 45.50, gain: -5.2, credit: "♪ AI-generated stand-in · Google Flow Music"}
+- clip: IMG_5839
+  in: 54.9
+  out: 120.8
+  label: "15:24"
+- machine:
+    - {t: "15:12", who: "terminal", text: "… does not match any"}
+    - {t: "15:13", who: "Ilya", text: "done"}
+    - {t: "15:13", who: "builder", text: "🚢 breaker is public"}
+    - {t: "15:14", who: "Ilya", text: "Ok, now guide me through a demo"}
+    - {t: "15:14", who: "builder", text: "Here's the run of show, about 8 minutes."}
+  dur: 13
+  size: 42
+  source: "launch and builder session transcripts · verbatim"
+  music: {file: music/music-D-breaker-v1-t1.m4a, at: 50.50, gain: -5.2, credit: "♪ AI-generated stand-in · Google Flow Music"}
+- machine:
+    - {t: "15:24:22", who: "Ilya", text: "I have exactly 2 minutes to present"}
+    - {t: "15:24:28", who: "builder", text: "Two-minute version."}
+  dur: 7
+  size: 64
+  source: "builder session transcript · verbatim"
+  music: {file: music/music-D-breaker-v1-t1.m4a, at: 63.50, gain: -5.2, credit: "♪ AI-generated stand-in · Google Flow Music"}
+- clip: IMG_5840
+  in: 0
+  out: 30
+  subs_file: mc0/IMG_5840.json
+  label: "15:27"
+- clip: IMG_5840
+  in: 56
+  out: 79
+  subs_file: mc0/IMG_5840.json
+  label: "15:27"
+- clip: IMG_5840
+  in: 333
+  out: 393
+  subs_file: mc0/IMG_5840.json
+  label: "15:32"
+- clip: IMG_5842
+  in: 244
+  out: 255
+  subs_file: mc0/IMG_5842.json
+  label: "15:48"
+- clip: IMG_5842
+  in: 398
+  out: 450.85
+  subs_file: mc0/IMG_5842.json
+  label: "15:50"
+- clip: IMG_5842
+  in: 456.85
+  out: 563
+  subs_file: mc0/IMG_5842.json
+  label: "15:51"
+- clip: IMG_5842
+  in: 571
+  out: 622.4
+  subs_file: mc0/IMG_5842.json
+  label: "15:53"
+- machine:
+    - {t: "15:18", who: "Ilya", text: "Say hello from behind breaker"}
+    - {t: "15:18", who: "a fresh Claude", text: "I couldn't find one to stand behind."}
+    - {t: "15:32", who: "a fresh Claude", text: "… from behind the breaker, wherever that turns out to be"}
+    - {t: "15:55", who: "a fresh Claude", text: "It's quiet back here, and nothing has tripped yet."}
+  dur: 13
+  size: 42
+  source: "three new sessions · verbatim"
+  music: {file: music/music-E-sleep-v1-t1.m4a, at: 1.00, gain: -4.8, credit: "♪ AI-generated stand-in · Google Flow Music"}
+
+# ---------- CHAPTER SIX ----------
+- card: "Chapter six\nin which the computer goes to sleep"
+  dur: 3.5
+  music: {file: music/music-S-stings-v2-t1.m4a, at: 71.0, gain: -0.7, fade: 0.6}
+- machine:
+    - {t: "15:35", who: "autofinish", text: "I did not land this branch. Ilya, your answer from 2026-10-08 contradicts it."}
+  dur: 6
+  size: 52
+  source: "autofinish log · verbatim"
+  music: {file: music/music-E-sleep-v1-t1.m4a, at: 14.00, gain: -4.8, credit: "♪ AI-generated stand-in · Google Flow Music"}
+- machine:
+    - {t: "16:30", who: "autofinish", text: "API Error: Your computer went to sleep mid-response."}
+  dur: 5
+  size: 52
+  source: "autofinish log · verbatim"
+  music: {file: music/music-E-sleep-v1-t1.m4a, at: 20.00, gain: -4.8, credit: "♪ AI-generated stand-in · Google Flow Music"}
+- card: ""
+  kind: plain
+  dur: 2.5
+
+# ---------- EPILOGUE ----------
+- card: "Epilogue\nin which the film is made"
+  dur: 3.5
+  music: {file: music/music-S-stings-v2-t1.m4a, at: 2.5, gain: -0.7, fade: 0.6}
+- machine:
+    - {t: "21:46", who: "Ilya", text: "Let's start a new production, it's going to be a new kind of work - video editing of live shot video footage."}
+    - {t: "21:46", who: "Ilya", text: "We need to launch tonight to YouTube"}
+    - {t: "21:58", who: "commit", text: "Production: docu/220-film from the pipeline's template/"}
+  dur: 12
+  size: 42
+  source: "this film's own session and repo · verbatim"
+  music: {file: music/music-F-made-v1-t1.m4a, at: 1.00, gain: -5.2, credit: "♪ AI-generated stand-in · Google Flow Music"}
+- machine:
+    - {t: "22:09", who: "Ilya", text: "Make claude and Ilya's work a significant centerpiece, this is complete pure documentary, we cannot and will not edit anything in that source."}
+    - {t: "22:50", who: "Ilya", text: "The tagline for the film is This is AI autobiography."}
+  dur: 11
+  size: 42
+  source: "this film's own session · verbatim"
+  music: {file: music/music-F-made-v1-t1.m4a, at: 13.00, gain: -5.2, credit: "♪ AI-generated stand-in · Google Flow Music"}
+- card: "2026-10-08\n53 Claude sessions on one laptop\n151 changes committed · 22 pull requests merged\n79 times: ILYA, …"
+  kind: plain
+  dur: 7
+  music: {file: music/music-F-made-v1-t1.m4a, at: 24.00, gain: -5.2}
+- card: "220\nan AI autobiography"
+  kind: chapter
+  dur: 4
+  music: {file: music/music-F-made-v1-t1.m4a, at: 31.00, gain: -5.2}
+- roll:
+    - "# With"
+    - "@credits with"
+    - ""
+    - "# Also in the film"
+    - "@credits also"
+    - ""
+    - "# Directed and produced by"
+    - "Ilya Fomin"
+    - ""
+    - "# Director of photography"
+    - "Zhan Petrov"
+    - "~ shot by the three of them, on two phones and a pair of camera glasses"
+    - "~ Gemini at Work '26 · Hangar One · NASA Ames Research Center · 2026-10-08"
+    - ""
+    - "# Edited by"
+    - "Claude Opus 5.5 · Anthropic"
+    - "~ chose every cut; wrote the cut list, the renderer, this roll"
+    - ""
+    - "# Visual effects, titles and motion graphics"
+    - "Claude Opus 5.5"
+    - "~ the machine cards, the chapter cards, the clock, this roll: drawn in code"
+    - ""
+    - "# Sound design and mix"
+    - "Claude Opus 5.5"
+    - "~ the room kept, the film levelled to -14 LUFS, music only where nobody speaks"
+    - ""
+    - "# Music supervision"
+    - "Claude Opus 5.5"
+    - "~ chose the agents' work music"
+    - ""
+    - "# Subtitles and translation"
+    - "Claude Sonnet 5.5 · Anthropic"
+    - "~ 18 Russian clips into English"
+    - ""
+    - "# Story consultant"
+    - "Claude Fable 5.1 · Anthropic"
+    - "~ the festival-jury critique of the rough cut"
+    - ""
+    - "# Research and fact-check"
+    - "Claude Sonnet 5.5 · Claude Opus 5.5"
+    - "~ the style research, the scan of the agents' day, the check of every claim"
+    - ""
+    - "# Transcription"
+    - "Whisper large-v3-turbo · OpenAI (MIT weights)"
+    - "~ through whisper.cpp, quantised q5_0, on this laptop"
+    - ""
+    - "# Music"
+    - "AI-generated stand-ins · Google Flow Music"
+    - "~ the agents' work music, made to the editor's prompts; licensed tracks to follow"
+    - ""
+    - "# Claude tokens"
+    - "spacesheep.dev · Ilya Fomin · Zhan Petrov"
+    - "Rob Nilsson Art Forms"
+    - "@logo spacesheep"
+    - ""
+    - "# Models in the film"
+    - "Claude Opus 5.5 · Claude Sonnet 5.5 · Claude Fable 5.1 · Anthropic"
+    - "~ the agents of the day, in 53 sessions"
+    - "Gemini · Google"
+    - "~ the keynote, the labs, the workshop"
+    - "the car's driver assist"
+    - "~ chapter one"
+    - ""
+    - "# The agents' day"
+    - "53 Claude Code sessions · 73 subagents · 2,273 tool calls"
+    - "151 changes committed (200 commits, rebases counted) · 22 pull requests merged"
+    - "89 autofinish sweeps"
+    - "17 replies stopped by a hook · 25 messages with a 🚢"
+    - ""
+    - "# Open source"
+    - "~ with thanks to everyone who writes and maintains it"
+    - ""
+    - "ffmpeg · whisper.cpp · x264 · Pillow · Python and 34 more"
+    - "~ full licence texts: THIRD-PARTY-NOTICES.md"
+    - ""
+    - "~ also: Claude Code 2.1.295 · Anthropic · macOS 26.3.1 · Apple"
+    - ""
+    - "# Type"
+    - "Trebuchet MS · Microsoft"
+    - "Menlo · Apple"
+    - "Apple Color Emoji · Apple"
+    - ""
+    - "# Keynote, quoted for commentary"
+    - "Sundar Pichai · Google"
+    - "~ Gemini at Work '26, Hangar One · © Google"
+    - "~ He did not take part in this film and has not endorsed it."
+    - ""
+    - "# Licence"
+    - "The recipe — the cut list and the scripts — MIT"
+    - "The footage, the faces, the voices and the words spoken:"
+    - "© 2026 the people in it. All rights reserved."
+    - "No reuse, no remix, no training. Not licensed under the above."
+    - ""
+    - "# These credits are open source"
+    - "Everyone who appears in this film can be listed here."
+    - "~ add or correct your own credit by pull request: github.com/220labs/220-film"
+    - "~ the film is re-rendered with every merged credit"
+    - ""
+    - "# ffpp.pictures/220"
+  dur: 60
