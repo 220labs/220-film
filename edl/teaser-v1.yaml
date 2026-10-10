@@ -1,0 +1,95 @@
+# 220 — the teaser, 75-90 s, for YouTube. Rendered by scripts/cut.py (see the README).
+# Machine lines are verbatim from the agents' sessions of 2026-10-08, each with its real time;
+# "…" marks an excerpt. Some clips are held back; the production's records say which and why.
+
+# ---------- COLD OPEN: the machine speaks first ----------
+- machine:
+    - {t: "09:29", who: "dispatch", text: "… nobody is watching, so decide from the brief and do not ask."}
+  dur: 3.5
+  size: 56
+  source: "dispatch preamble · 2026-10-08 · verbatim"
+  music: {file: music/music-C-waiting-v1-t1.m4a, at: 1.00, gain: -0.8, credit: "♪ AI-generated stand-in · Google Flow Music"}
+- clip: IMG_5770
+  in: 153.9
+  out: 160.5
+- clip: IMG_5780
+  in: 0
+  out: 3.0
+- clip: IMG_5781
+  in: 0
+  out: 13.0
+- clip: IMG_5779
+  in: 18.0
+  out: 21.9
+- clip: IMG_5779
+  in: 106.0
+  out: 109.6
+- clip: IMG_5779
+  in: 129.5
+  out: 134.0
+  subs: none
+- clip: IMG_5813
+  in: 121.1
+  out: 127.95
+- machine:
+    - {t: "13:07", who: "orchestrator", text: "ILYA, THIS SESSION IS WAITING FOR YOU — the daily brief, 3 decisions"}
+  dur: 3
+  size: 36
+  source: "orchestrator transcript · verbatim"
+  music: {file: music/music-C-waiting-v1-t1.m4a, at: 4.50, gain: -0.8, credit: "♪ AI-generated stand-in · Google Flow Music"}
+- clip: IMG_5814
+  in: 546.2
+  out: 552.2
+- clip: IMG_5838
+  in: 36.0
+  out: 46.1
+- machine:
+    - {t: "15:08:14", who: "Ilya", text: "merge yourself!"}
+    - {t: "15:08:54", who: "builder", text: "🚢 Merged."}
+  dur: 5
+  size: 64
+  source: "builder session transcript · verbatim"
+  music: {file: music/music-D-breaker-v1-t1.m4a, at: 0.50, gain: -5.2, credit: "♪ AI-generated stand-in · Google Flow Music"}
+- machine:
+    - {t: "01:00", who: "a session", text: "ILYA, IT'S FINE — THIS SESSION IS REALLY DONE. YOU HAVEN'T FORGOTTEN ANYTHING."}
+  dur: 4
+  source: "laptop session transcripts and autofinish log · 2026-10-08 · verbatim"
+  music: {file: music/music-E-sleep-v1-t1.m4a, at: 1.00, gain: -4.8, credit: "♪ AI-generated stand-in · Google Flow Music"}
+- machine:
+    - {t: "15:24:22", who: "Ilya", text: "I have exactly 2 minutes to present"}
+    - {t: "15:24:28", who: "builder", text: "Two-minute version."}
+  dur: 5
+  size: 64
+  source: "builder session transcript · verbatim"
+  music: {file: music/music-D-breaker-v1-t1.m4a, at: 5.50, gain: -5.2, credit: "♪ AI-generated stand-in · Google Flow Music"}
+- clip: IMG_5842
+  in: 250.0
+  out: 254.5
+  subs_file: mc0/IMG_5842.json
+- machine:
+    - {t: "15:18", who: "Ilya", text: "Say hello from behind breaker"}
+    - {t: "15:18", who: "a fresh Claude", text: "I couldn't find one to stand behind."}
+  dur: 5
+  size: 42
+  source: "three new sessions · verbatim"
+  music: {file: music/music-E-sleep-v1-t1.m4a, at: 5.00, gain: -4.8, credit: "♪ AI-generated stand-in · Google Flow Music"}
+- machine:
+    - {t: "16:30", who: "autofinish", text: "API Error: Your computer went to sleep mid-response."}
+  dur: 4
+  source: "autofinish log · verbatim"
+  music: {file: music/music-E-sleep-v1-t1.m4a, at: 10.00, gain: -4.8, credit: "♪ AI-generated stand-in · Google Flow Music"}
+
+# ---------- TITLE ----------
+- card: "220"
+  kind: title
+  dur: 3
+  music: {file: music/music-S-stings-v2-t1.m4a, at: 2.5, gain: -0.7, fade: 0.6}
+- card: "AN AI AUTOBIOGRAPHY"
+  kind: chapter
+  small: "A film about AI, edited by AI. The AI in it is real."
+  dur: 4
+  music: {file: music/music-S-stings-v2-t1.m4a, at: 83.5, gain: -0.7, fade: 0.6}
+- card: "An open-source film · github.com/220labs/220-film\nShot at Google's Gemini at Work '26, Hangar One\nFull film today on YouTube · ffpp.pictures/220"
+  kind: plain
+  dur: 5
+  music: {file: music/music-S-stings-v2-t1.m4a, at: 23.0, gain: -0.7, fade: 0.6}

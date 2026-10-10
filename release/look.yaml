@@ -1,0 +1,9 @@
+# Colour grade of the footage for scripts/cut.py. Flip `grade` by pull request; every clip re-renders on the
+# next run (the chosen chain is part of each clip's cache key). Cards, machine screens, captions and labels
+# are never graded. Options were shown to Ilya, Zhan and Bogdan on 2026-10-09.
+grade: Z
+looks:
+  Z: "lut1d='{looks}/zhan-v1.cube',unsharp=5:5:0.6"   # matched to Zhan's before/after grabs, plus a little crispness
+  A: "eq=contrast=1.06:saturation=1.10:gamma=0.98"                     # clean: a small lift, safe on every clip
+  B: "curves=all='0/0.03 0.25/0.22 0.5/0.5 0.75/0.79 1/0.97',colorbalance=rm=0.04:bm=-0.04:rh=0.03:bh=-0.03,eq=saturation=1.05"  # warm film
+  C: "colorbalance=rs=-0.06:bs=0.06:rh=0.06:bh=-0.05,curves=all='0/0 0.25/0.21 0.75/0.80 1/1',eq=saturation=1.12"           # teal/warm
