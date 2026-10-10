@@ -5,10 +5,10 @@ on 2026-10-09, each from one text prompt ([prompts.md](prompts.md)), one take pe
 person composed, played or arranged them; the cut trims them to length, sets their level
 and fades them; nothing else.
 
-**No rights claimed.** These recordings are AI output, and no copyright is claimed in them. A
-dedication to the public domain under
-[CC0 1.0 Universal](https://creativecommons.org/publicdomain/zero/1.0/) follows here once everyone
-who made them has said yes. Credit, wherever they are used: "AI-generated (Google Flow Music),
+**No rights claimed: CC0.** These recordings are AI output. To the extent any copyright or
+related right exists in them, it is dedicated to the public domain under
+[CC0 1.0 Universal](https://creativecommons.org/publicdomain/zero/1.0/), by everyone who made
+them. Use them for anything. Credit, wherever they are used: "AI-generated (Google Flow Music),
 from the film 220".
 
 This record lets anyone tell these recordings apart from a later claim on them: each is

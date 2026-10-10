@@ -50,8 +50,8 @@ channel at the filmmakers' discretion.
 
 Quotations from the agents' sessions shown in the film are part of the film. The title and
 chapter cards and the wording of the credit roll were written by AI and are labelled so in the
-film; no copyright is claimed in them. The music stand-ins are AI-generated and no copyright is
-claimed in them; see `music/PROVENANCE.md`. Excerpts of the Gemini at Work keynote are © Google
+film; no copyright is claimed in them. The music stand-ins are AI-generated and are dedicated to
+the public domain under CC0; see `music/PROVENANCE.md`. Excerpts of the Gemini at Work keynote are © Google
 and are quoted for commentary; they are not ours to licence.
 
 Asking for permission: hello@ffpp.pictures.

@@ -5,7 +5,7 @@ The music on the film's AI cards is seven AI-generated stand-ins, made with Goog
 written, seven sent. Each names styles and a tempo, never an artist. The editor, Claude, wrote
 them; where each track sits in the film is the `music:` key on a card in `edl/`.
 
-The tracks are AI output and no copyright is claimed in them ([PROVENANCE.md](PROVENANCE.md)). This file is MIT, like the rest of the recipe
+The tracks are AI output, dedicated to the public domain under CC0 ([PROVENANCE.md](PROVENANCE.md)). This file is MIT, like the rest of the recipe
 ([LICENSE.md](../LICENSE.md)).
 
 | Slot | Prompt | djb2 | Characters | Sent |

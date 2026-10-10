@@ -70,8 +70,8 @@ The recipe is MIT: the scripts, the cut lists, the render settings and the music
 works. The words shown on screen (every quoted string under `machine:`, `card:` and `roll:`) and
 the names in `CREDITS.yaml` are part of the film. The film, its footage, and the faces, voices
 and words of the people in it are all rights reserved: no reuse, no redistribution, no training.
-Films built from contributions are shown only on the 220 channel, at our discretion. No
-copyright is claimed in the AI music ([music/PROVENANCE.md](music/PROVENANCE.md)). The full text: [LICENSE.md](LICENSE.md).
+Films built from contributions are shown only on the 220 channel, at our discretion. The AI
+music is in the public domain, CC0 ([music/PROVENANCE.md](music/PROVENANCE.md)). The full text: [LICENSE.md](LICENSE.md).
 
 ## Contributing
 
