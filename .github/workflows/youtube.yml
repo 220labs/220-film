@@ -1,0 +1,242 @@
+# Upload and manage this production's YouTube videos from CI: release/youtube.yaml is the truth, the tool makes
+# the channel match it. Copied from the pipeline's YouTube workflow template on 2026-10-11;
+# GRIPTRUCK_SHA below names a published tree, then it is yours. The public tool repo was 220labs/ffpp-tools until
+# 2026-10-10 and is 220labs/griptruck now.
+#
+# Why it is built this way:
+#  - The tool is not vendored. It is checked out from the public 220labs/griptruck at ONE full commit sha
+#    (GRIPTRUCK_SHA): a runner executes whatever that ref holds with your channel's token in its environment, so a
+#    moving branch or a tag would let a later push change what runs. The first step refuses anything but 40 hex digits.
+#    Every action below is pinned the same way, by full sha with its version in a comment (a tag can be moved).
+#    Both checkouts drop the job token (persist-credentials: false): nothing here pushes.
+#  - Python packages are pinned with ==, in a venv (the runner's system python refuses a global pip install). Their own
+#    dependencies float; pin them too, with hashes, if that ever matters more than the upkeep.
+#  - Secrets reach only the step that calls YouTube, as environment variables, never inside a script. Inputs reach the
+#    script the same way (VERB, KEY, FILE, DRY_RUN): a `${{ inputs.x }}` pasted into a run: block is shell injection
+#    for anyone who can start the workflow. The pipeline's scripts/release/test_youtube.sh fails if either appears in its template's run: blocks.
+#  - permissions is contents: read and nothing pushes. `upload` writes the new id into release/youtube.yaml, and
+#    `apply` records sent thumbnails and captions, and recent public flips, in release/youtube.state.json. Those two
+#    files go up as a workflow artifact and their diff is printed, and a person commits them (an id lost is a video
+#    found by hand). A caller that wants them committed adds its own job with contents: write, from that artifact.
+#  - The state file is also kept between runs in the Actions cache (restored by prefix, saved under a key unique to
+#    the run), because thumbnails and captions are media and not in git: without it every run would think nothing was
+#    ever sent. A lost cache (evicted after 7 days unused; the weekly keepalive keeps it warm) costs one re-send of
+#    each thumbnail and caption file (captions.insert is 400 quota units a language) and resets the count of public
+#    flips in the last 24 h to zero. A restored cache replaces a committed copy of the state file.
+#    Thumbnails and captions not in the checkout are skipped with a note; pass --strict in a copy of this file to
+#    make that an error.
+#  - One writing run at a time (concurrency): two applies over one channel would race on the quota and the state file.
+#    Only an upload or a real apply joins the `youtube` group. GitHub keeps one pending run per group and cancels
+#    the older one, so a read (list, whoami, keepalive, a dry run) in the same group could cancel a waiting upload;
+#    reads get a group of their own. Two writes started together still leave only the newest pending: wait for one.
+#  - The weekly schedule runs `keepalive`, one cheap authenticated call, so the refresh token is never idle for the
+#    six months after which Google revokes it. A scheduled workflow is disabled after 60 days without repo activity;
+#    every build that calls `whoami` also proves the token.
+#  - A dead token (invalid_grant) is reported as such, and never retried; a rejected OAuth client (invalid_client) is
+#    reported as that: `auth` is for a laptop and is refused in CI, because every run of it issues a token and a
+#    client keeps only the newest 100.
+#  - `upload` has no dry run, so a dry_run input of true refuses it instead of uploading anyway. The video file is
+#    either in the checkout, or handed over by the caller's build job as a workflow artifact named in the `artifact`
+#    input (then `file` is a path inside that artifact).
+#
+# Call it from a build: uses: ./.github/workflows/youtube.yml with: {verb: upload, key: …, file: …, artifact: …}
+# and secrets: inherit
+name: youtube
+on:
+  workflow_dispatch:
+    inputs:
+      verb:
+        description: what to run
+        type: choice
+        options: [apply, upload, list, whoami]
+        default: apply
+      key:
+        description: a key under videos:, for upload (required) or apply (one video only)
+        type: string
+        default: ''
+      file:
+        description: for upload, the video file, relative to the repo root (or to the artifact, when one is named)
+        type: string
+        default: ''
+      artifact:
+        description: for upload, the name of a workflow artifact of this run that holds the file
+        type: string
+        default: ''
+      dry_run:
+        description: for apply, print the diff and the quota, change nothing
+        type: boolean
+        default: true
+  workflow_call:
+    inputs:
+      verb:
+        type: string
+        default: apply
+      key:
+        type: string
+        default: ''
+      file:
+        type: string
+        default: ''
+      artifact:
+        type: string
+        default: ''
+      dry_run:
+        type: boolean
+        default: false
+    secrets:
+      # the three repository secrets; their values never appear in this file
+      YT_CLIENT_ID: {required: true}
+      YT_CLIENT_SECRET: {required: true}
+      YT_REFRESH_TOKEN: {required: true}
+  schedule:
+    - cron: '23 5 * * 1'
+permissions:
+  contents: read
+concurrency:
+  group: ${{ ((inputs.verb == 'upload' || inputs.verb == 'apply') && !inputs.dry_run) && 'youtube' || format('youtube-read-{0}', github.run_id) }}
+  cancel-in-progress: false
+env:
+  # A full 40-digit commit sha of 220labs/griptruck. Required: the first step refuses an empty or short value.
+  # b3e6e83 is griptruck's head on 2026-10-11 ("the name, a 220 Labs tool, blur and youtube"); its scripts/release/youtube.py
+  # is byte-identical to the pipeline's. Move it on purpose, after reading the diff.
+  GRIPTRUCK_SHA: 'b3e6e83b89eb94bc3c4472db75e1f3966503937e'
+  # Versions pip resolved when this was written; raise them on purpose.
+  PIP_PACKAGES: >-
+    google-api-python-client==2.198.0
+    google-auth==2.50.0
+    google-auth-oauthlib==1.3.1
+    pyyaml==6.0.3
+jobs:
+  # The template carries this file before a production has a channel, so its weekly keepalive waits for the
+  # YT_REFRESH_TOKEN secret. 220-film's channel is wired (@220film, the three secrets set 2026-10-11), so the
+  # weekly keepalive runs; the gate stays as the template has it, because it also keeps a fork, which has no
+  # secrets, from failing every Monday. A run asked for by hand or by a build still fails loudly when anything
+  # is missing. A job's `if:` cannot read secrets, hence a job; the value only reaches a test for emptiness.
+  gate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 2
+    outputs:
+      run: ${{ steps.g.outputs.run }}
+    steps:
+      - id: g
+        shell: bash
+        env:
+          HAS_TOKEN: ${{ secrets.YT_REFRESH_TOKEN != '' }}
+        run: |
+          if [ "$GITHUB_EVENT_NAME" = schedule ] && [ "$HAS_TOKEN" != true ]; then
+            echo "::notice::keepalive skipped: no YT_REFRESH_TOKEN secret, so this production has no channel wired"
+            echo run=false >> "$GITHUB_OUTPUT"
+          else
+            echo run=true >> "$GITHUB_OUTPUT"
+          fi
+  youtube:
+    needs: gate
+    if: needs.gate.outputs.run == 'true'
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    env:
+      # A schedule has no inputs: that run is the keepalive.
+      VERB: ${{ inputs.verb || 'keepalive' }}
+      KEY: ${{ inputs.key }}
+      FILE: ${{ inputs.file }}
+      ARTIFACT: ${{ inputs.artifact }}
+      DRY_RUN: ${{ inputs.dry_run }}
+    steps:
+      - name: the tools sha is pinned
+        shell: bash
+        run: |
+          if ! printf '%s' "$GRIPTRUCK_SHA" | grep -Eq '^[0-9a-f]{40}$'; then
+            echo "::error::set GRIPTRUCK_SHA at the top of this workflow to a full commit sha of 220labs/griptruck"
+            exit 1
+          fi
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          repository: 220labs/griptruck
+          ref: ${{ env.GRIPTRUCK_SHA }}
+          path: .griptruck
+          persist-credentials: false
+      - name: the video file from the build job
+        if: inputs.artifact != ''
+        uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
+        with:
+          name: ${{ inputs.artifact }}
+          path: .youtube-input
+      - name: restore the state file
+        uses: actions/cache/restore@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: release/youtube.state.json
+          key: youtube-state-${{ github.run_id }}-${{ github.run_attempt }}
+          restore-keys: |
+            youtube-state-
+      - name: install the client
+        shell: bash
+        run: |
+          python3 -m venv "$RUNNER_TEMP/yt-venv"
+          # $PIP_PACKAGES is deliberately unquoted: it is a list of requirement specifiers
+          "$RUNNER_TEMP/yt-venv/bin/pip" install --quiet $PIP_PACKAGES
+      - name: youtube
+        shell: bash
+        env:
+          YT_CLIENT_ID: ${{ secrets.YT_CLIENT_ID }}
+          YT_CLIENT_SECRET: ${{ secrets.YT_CLIENT_SECRET }}
+          YT_REFRESH_TOKEN: ${{ secrets.YT_REFRESH_TOKEN }}
+        run: |
+          set -o pipefail
+          case "$VERB" in
+            apply)
+              args=(apply)
+              [ -n "$KEY" ] && args+=(--only "$KEY")
+              [ "$DRY_RUN" = true ] && args+=(--dry-run) ;;
+            upload)
+              if [ "$DRY_RUN" = true ]; then
+                echo "::error::upload has no dry run: set dry_run to false to upload"; exit 2
+              fi
+              if [ -z "$KEY" ] || [ -z "$FILE" ]; then
+                echo "::error::upload needs key and file"; exit 2
+              fi
+              if [ -n "$ARTIFACT" ]; then
+                case "$FILE" in
+                  /* | *..*) echo "::error::file must be a path inside the artifact, without .. or a leading /"; exit 2 ;;
+                esac
+                FILE=".youtube-input/$FILE"
+              fi
+              args=(upload "$FILE" --key "$KEY") ;;
+            list | whoami | keepalive) args=("$VERB") ;;
+            *) echo "::error::unknown verb: $VERB"; exit 2 ;;
+          esac
+          "$RUNNER_TEMP/yt-venv/bin/python" .griptruck/scripts/release/youtube.py "${args[@]}" 2>&1 | tee "$RUNNER_TEMP/youtube.log"
+      - name: keep the state file for the next run
+        if: always() && (env.VERB == 'apply' || env.VERB == 'upload') && env.DRY_RUN != 'true' && hashFiles('release/youtube.state.json') != ''
+        uses: actions/cache/save@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: release/youtube.state.json
+          # under workflow_call run_id is the caller's: verb and key keep two calls of one build from sharing a key
+          key: youtube-state-${{ github.run_id }}-${{ github.run_attempt }}-${{ env.VERB }}-${{ env.KEY }}
+      - name: what changed in the config and the state
+        if: always()
+        shell: bash
+        run: git add -N release/ && git --no-pager diff --stat -- release/ && git --no-pager diff -- release/
+      - name: the config and the state, for a person to commit
+        if: always()
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: youtube-release-files
+          path: |
+            release/youtube.yaml
+            release/youtube.state.json
+          if-no-files-found: ignore
+      - name: say why it failed
+        if: failure()
+        shell: bash
+        run: |
+          log="$RUNNER_TEMP/youtube.log"
+          if grep -q invalid_grant "$log" 2>/dev/null; then
+            echo "::error::token dead: re-run \`bin/tool youtube auth\` on the laptop and reset YT_REFRESH_TOKEN"
+          elif grep -q invalid_client "$log" 2>/dev/null; then
+            echo "::error::the OAuth client was rejected (invalid_client): check the YT_CLIENT_ID and YT_CLIENT_SECRET secrets; the refresh token may be fine"
+          elif grep -Eq 'quotaExceeded|uploadLimitExceeded|dailyLimitExceeded' "$log" 2>/dev/null; then
+            echo "::error::YouTube quota or upload limit spent: nothing was retried; run again after midnight Pacific time"
+          fi
