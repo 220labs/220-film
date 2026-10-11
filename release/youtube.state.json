@@ -1,0 +1,16 @@
+{
+  "film-v0.1": {
+    "captions": {
+      "en": "9c4bd874e23460d62c199c1c3fcfcd35b9705a97e4d2d91170a9832b3c4eb9f0"
+    },
+    "thumb_sha": "52625aa75b970c663be2f8307855b1224d37f62409b22b6c4bccb50f665b13a4",
+    "video": "XKJ-gWXQKVU"
+  },
+  "teaser-v0.1": {
+    "captions": {
+      "en": "b8fa43f86d83414f3528c4a54265753d961e8572d6128c633674d48f78ce2fb7"
+    },
+    "thumb_sha": "758a189bc53e56aa639be307e32d058c95e1059520522ec8aba79c9af835d8f7",
+    "video": "6Yuyj0Jo7mU"
+  }
+}
