@@ -1,0 +1,6 @@
+# Videos whose published entry never changes: a published version is never altered; scripts/frozen.py checks.
+# key<TAB>sha256 of what apply sends for it (entry over defaults); a line per video when its version is published.
+teaser-v5	dfbe114c48e8aea6fd7b015dfce8cffd1b2cc66368a430595b4e75211ef362e9
+film	0a54e7a155c968a8f220ae488dd7dce3c8df56c4caf57faab20e658b178e326e
+film-v0.1	cca313243494be3882f37d0fcefe7716356c9b78fe82f0a9b45a3b60783d523d
+teaser-v0.1	6fbdb9b652fb89a0687bb256288dc3eeda05583d89ee684939a66b4bfc0f7e8a
