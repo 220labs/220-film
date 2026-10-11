@@ -1,0 +1,70 @@
+# The 4K upscale of 220: Topaz Video's tvai_up, read by scripts/upscale.py.
+# The film is shot on phones at 1920x1080, 29.97 fps, H.264 at about 11 Mbit/s: clean, bright and
+# progressive, so the job is a 2x upscale that keeps faces and fine texture honest. No denoise pass,
+# no grain, no frame interpolation: the footage needs none of them (probed 2026-10-10: progressive, little noise).
+# Rule 1 of the brief still holds: an upscale adds pixels, never content, and a model that invents
+# features (a face, a word on a sign) is out however pretty it is.
+
+target: {w: 3840, h: 2160}
+
+# Which variant renders the film. null until a person picks one from the A/B reel.
+pick: proteus-tuned   # picked from the A/B reel, 2026-10-10
+
+# `upscale.py film`: the spans of footage a cut uses. `margin` widens each used range on both sides and
+# ranges closer than `join` seconds share one span (one model load). ProRes 422 LT (profile 1, about
+# 1.4 MB a 4K frame, ~50 GB for the cut's ~36,000 frames) is the spans' codec: HQ (3.2 MB, ~118 GB)
+# buys nothing that survives the HEVC 10-bit encode of the cut, and LT is still a mezzanine codec.
+film: {margin: 0.5, join: 3.0, prores_profile: 1}
+
+# Every variant is one tvai_up call (or none, for the reference). `model` is Topaz's model id;
+# `params` go into the filter as they are. A host renders only the variants whose model its
+# Topaz has (`scripts/upscale.py doctor` lists them); the rest are skipped, never substituted.
+variants:
+  lanczos:          # the reference: what a plain 4K upload of the 1080p film looks like
+    label: "1080p, plain resize"
+  proteus-auto:
+    label: "Proteus, auto"
+    model: prob-4
+    params: {scale: 0, estimate: 8, preblur: 0, noise: 0, details: 0, halo: 0, blur: 0, compression: 0, blend: 0.2}
+  proteus-tuned:    # light compression and halo clean-up, no added detail: clean phone footage
+    label: "Proteus, tuned"
+    model: prob-4
+    params: {scale: 0, preblur: 0, noise: 0.2, details: 0, halo: 0.05, blur: 0, compression: 0.15, blend: 0.5}
+  iris:
+    label: "Iris"
+    model: iris-3
+    params: {scale: 0, estimate: 8, blend: 0.2}
+  rhea:
+    label: "Rhea"
+    model: rhea-1
+    params: {scale: 0, estimate: 8, blend: 0.2}
+  rhea-xl:
+    label: "Rhea XL"
+    model: rxl-1
+    params: {scale: 0, estimate: 8, blend: 0.2}
+  gaia:
+    label: "Gaia HQ"
+    model: ghq-5
+    params: {scale: 0}
+  artemis:
+    label: "Artemis HQ"
+    model: ahq-12
+    params: {scale: 0}
+  starlight:        # diffusion; minutes per second of footage, so the bench runs it on few shots
+    label: "Starlight Precise"
+    model: slp-2.5
+    params: {scale: 0}
+    shots: [faces-plaid, close-face]
+
+# The bench: short spans that stand for the whole film. `clip` and `src` are the camera
+# original and the time in it, from edl/clean-v1.yaml; `cut` is the same moment in the clean
+# edition's 1080p render, which the bench reads when the originals are not on the machine.
+# `crop` is the 1920x1080 window of the 4K frame (top-left corner) that the sheet and the reel
+# show at one pixel per pixel.
+shots:
+  - {id: faces-plaid,  what: "two faces, plaid, roof truss",  clip: IMG_5771, src: 10.10, cut: 166.0, dur: 6, crop: [1280, 0]}
+  - {id: stage-dark,   what: "dark stage, small figures",     clip: IMG_5779, src: 117.36, cut: 196.0, dur: 6, crop: [700, 300]}
+  - {id: sun-outdoor,  what: "hard sun, sky, skin",           clip: IMG_5804, src: 19.96, cut: 398.0, dur: 6, crop: [640, 300]}
+  - {id: whip-pan,     what: "fast pan, motion blur",         clip: IMG_5814, src: 243.96, cut: 640.0, dur: 6, crop: [960, 540]}
+  - {id: hangar-wide,  what: "hangar truss, crowd, far text", clip: IMG_5814, src: 481.66, cut: 688.0, dur: 6, crop: [960, 0]}
+  - {id: close-face,   what: "close face, beard, headphones", clip: IMG_5840, src: 64.46, cut: 1080.0, dur: 6, crop: [960, 300]}

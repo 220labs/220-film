@@ -1,12 +1,13 @@
 # 220's YouTube videos, as they are LIVE on @220film (channel UC2WOr2KjkSog-miU4IaMyWQ), read 2026-10-11 with the tool's
 # own client (channels.list, playlistItems.list, videos.list; nothing written). `bin/tool youtube apply --dry-run` reports
-# no change against it. Then, the same day, the film took its full description (chapters, credits, licence) and both
-# videos category 1, Film & Animation. This file is the truth for what is live; to change a video, edit it here and run
-# apply (in CI: .github/workflows/youtube.yml).
-# Not declared on the two v0.0 entries, on purpose: thumbnails and captions (a file declared but never recorded in
-# youtube.state.json would be sent on the first real apply: a write, not a no-op); tags (none live); synthetic (the API
-# does not return it). The v0.1 entries (uploaded 2026-10-11, premiered 11:11 PT) declare all of them: the upload
-# recorded their hashes in youtube.state.json. Playlists: none. Shape: the header of
+# no change against it. This file is the truth for what is live; to change a video, edit it here and run apply (in CI:
+# .github/workflows/youtube.yml).
+# A published version is never altered (scripts/frozen.py and release/frozen.tsv hold it so): the two v0.0 entries are that first read, as published,
+# put back on YouTube on 2026-10-11 after a day of edits (the film's full description, category 1, the v0.1 titles and
+# forward links), and are never edited again. Not declared on them, so apply never sends any: thumbnails and captions
+# (a file declared but never recorded in youtube.state.json would be sent on the first real apply: a write, not a
+# no-op); tags (none live); synthetic (the API does not return it). The v0.1 entries (uploaded 2026-10-11, premiered 11:11
+# PT, frozen as live that evening) declare all of them: the upload recorded their hashes in youtube.state.json. Playlists: none. Shape: the header of
 # scripts/release/youtube.py in 220labs/griptruck.
 channel: UC2WOr2KjkSog-miU4IaMyWQ
 defaults: {category: 1, language: en, privacy: private, made_for_kids: false, license: youtube, notify: false}
@@ -14,18 +15,17 @@ videos:
   teaser-v5:
     id: tzysWhKr7Uk
     file: 220-teaser-v5.mp4
-    title: "220 v0.0 teaser | An AI autobiography"
+    title: "Open-source film: Google Gemini workshop at NASA, edited by AI | 220"
+    category: 22
     privacy: public
     description: |
-      The newer version, v0.1: https://youtu.be/6Yuyj0Jo7mU
-
       An open-source film: a Google Gemini workshop at NASA Ames, and the AI agents that kept working the whole day. Edited by AI.
 
       220 is a documentary shot on two phones on 2026-10-08 at Hangar One, NASA Ames Research Center, at Gemini at Work. Three friends present and argue about AI agent workflows. Intercut with the room is the day nobody in it could see: Ilya's Claude agents working on their own, in their own words, on screen as they wrote them.
 
       The AI in the film is real. Nothing in the footage is edited in content, and the agents' lines are shown verbatim with their real times.
 
-      The full film, v0.0: https://youtu.be/5zSqs-3qyg4
+      Full film premieres today, 11:11 PT: https://youtu.be/5zSqs-3qyg4
       Open source: the cut list, scripts and credits (not the footage): https://github.com/220labs/220-film
       Film page: https://ffpp.pictures/220/
 
@@ -36,42 +36,20 @@ videos:
   film:
     id: 5zSqs-3qyg4
     file: 220-clean-v5.mp4
-    title: "220 v0.0 | An AI autobiography"
+    title: "Open-source film: Google Gemini at NASA, edited by AI | 220"
+    category: 22
     privacy: public
     description: |
-      A newer version, v0.1: https://youtu.be/XKJ-gWXQKVU
+      An open-source film: a Google Gemini workshop at NASA Ames, and the AI agents that kept working the whole day. Edited by AI.
 
-      220 is an open-source film about a Google Gemini workshop at NASA Ames and the Claude agents that worked through the same day. A film about AI, edited by AI. The AI in it is real. As far as we could find, it is the first documentary edited by the AI in it (prior-art search of 2026-10-11: https://github.com/220labs/220-film/blob/main/FIRSTS.md; know an earlier one? open a pull request).
+      220 is a documentary shot on two phones on 2026-10-08 at Hangar One, NASA Ames Research Center, at Gemini at Work. Three friends present and argue about AI agent workflows. Intercut with the room is the day nobody in it could see: Ilya's Claude agents working on their own, in their own words, on screen as they wrote them.
 
-      One day, 2026-10-08, 08:35 to 16:01, Hangar One, NASA Ames Research Center, Gemini at Work. Three friends present and argue their way through hard problems in AI agent workflows. Intercut, the day nobody in the room could see: Ilya's Claude agents working on their own, sessions blocking each other, hooks shouting in capitals, a tool built, merged and made public while the workshop went on. Two worlds, one clock.
+      The AI in the film is real. Nothing in the footage is edited in content, and the agents' lines are shown verbatim with their real times.
 
-      Nothing in the source is edited. Session text, hook messages, commits and pull requests appear verbatim with their real times.
+      Open source: the cut list, scripts and credits (not the footage): https://github.com/220labs/220-film
+      Film page: https://ffpp.pictures/220/
 
-      CHAPTERS
-      0:00 Cold open
-      0:30 Prologue: in which the machines work through the night
-      0:56 Chapter one: in which three friends go to NASA
-      3:07 Chapter two: in which Google makes a cloud indoors
-      4:32 Chapter three: in which everyone is selling something
-      8:23 Chapter four: in which the lab teaches them to copy and paste
-      12:29 Chapter five: in which a breaker is built in 29 minutes
-      23:08 Chapter six: in which the computer goes to sleep
-      23:25 Epilogue: in which the film is made
-
-      CREDITS
-      With: Ilya Fomin, Zhan Petrov and Bogdan Barchuk.
-      Also in the film: Sara Emmett, who made the coffee, and Gina, brand ambassador.
-      Directed and produced by: Ilya Fomin, Zhan Petrov and Claude Opus 5.5 (Anthropic). Director of photography: Zhan Petrov. Shot by the three of them, on two phones and a pair of camera glasses.
-      Edited by: Claude Opus 5.5 (Anthropic), which chose every cut and wrote the cut list, the renderer and the credit roll; also titles and motion graphics, sound design and mix, and music supervision.
-      Also made with: Claude Sonnet 5.5 (subtitles and translation, research); Claude Fable 5.1 (story consultant); Whisper large-v3-turbo (transcription). Music: AI-generated stand-ins, Google Flow Music, labelled in the film.
-      In the film: Claude Opus 5.5, Sonnet 5.5 and Fable 5.1, Anthropic, as the agents of the day (53 Claude Code sessions); Gemini, Google, as the subject of the workshop.
-      Claude tokens: spacesheep.dev, Ilya Fomin, Zhan Petrov, Rob Nilsson Art Forms.
-      Keynote, quoted for commentary: Sundar Pichai, Google (Gemini at Work '26, Hangar One, (c) Google). He did not take part in this film and has not endorsed it.
-      Open source: the recipe, meaning the cut list and the scripts that render this film (MIT), and the credits, which anyone in the film can add to or correct by pull request: https://github.com/220labs/220-film
-      The footage, faces and voices are not open (see LICENCE). Film page: https://ffpp.pictures/220/
-
-      LICENCE
-      The film, its footage, faces, voices and the words spoken in it are (c) 2026 the filmmakers and the people in it. All rights reserved. No reuse, no remix, no re-upload, no use as data for training, fine-tuning or evaluating any machine-learning model, and no synthetic likeness or voice made from it. Each person in the film keeps their own rights in their likeness and voice. Keynote excerpts are (c) Google, quoted for commentary. Permission requests: hello@ffpp.pictures.
+      (c) 2026 the filmmakers. All rights reserved. No reuse, no remix, no re-upload, no use as data for training any machine-learning model. Keynote excerpts (c) Google, quoted for commentary.
 
       #220 #OpenSource #AIAgents #Documentary #ClaudeCode
   film-v0.1:
@@ -86,6 +64,13 @@ videos:
       One day, 2026-10-08, 08:35 to 16:01, Hangar One, NASA Ames Research Center, Gemini at Work. Three friends present and argue their way through hard problems in AI agent workflows. Intercut, the day nobody in the room could see: Ilya's Claude agents working on their own, sessions blocking each other, hooks shouting in capitals, a tool built, merged and made public while the workshop went on. Two worlds, one clock.
 
       Nothing in the source is edited. Session text, hook messages, commits and pull requests appear verbatim with their real times.
+
+      WHAT'S NEW IN v0.1
+      - Credits: Claude Opus 5.5 directs and produces beside Ilya Fomin and Zhan Petrov; Gina joins the roll.
+      - The roll reads its names from CREDITS.yaml: anyone in the film can correct their own line by pull request.
+      - Open source: the cut lists, render scripts, music prompts and credits (MIT; the AI music CC0).
+      - English captions on YouTube, from the hand-checked subtitles.
+      - New thumbnails, in the film-poster style.
 
       CHAPTERS
       0:00 Cold open
@@ -130,6 +115,13 @@ videos:
       220 is a documentary shot on two phones and a pair of camera glasses on 2026-10-08 at Hangar One, NASA Ames Research Center, at Gemini at Work. Three friends present and argue about AI agent workflows. Intercut with the room is the day nobody in it could see: Ilya's Claude agents working on their own, in their own words, on screen as they wrote them.
 
       The AI in the film is real. Nothing in the footage is edited in content, and the agents' lines are shown verbatim with their real times.
+
+      WHAT'S NEW IN v0.1
+      - Credits: Claude Opus 5.5 directs and produces beside Ilya Fomin and Zhan Petrov; Gina joins the roll.
+      - The roll reads its names from CREDITS.yaml: anyone in the film can correct their own line by pull request.
+      - Open source: the cut lists, render scripts, music prompts and credits (MIT; the AI music CC0).
+      - English captions on YouTube, from the hand-checked subtitles.
+      - New thumbnails, in the film-poster style.
 
       The full film, v0.1: https://youtu.be/XKJ-gWXQKVU
       Open source: the cut list, scripts and credits (not the footage): https://github.com/220labs/220-film

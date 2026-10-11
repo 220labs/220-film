@@ -18,13 +18,20 @@ The people's own words never sit in a cut list: hand subtitles (`lines:`) and wh
 (`fix:`) live in a private sidecar, $WORK/lines/<cut>.yaml, merged in before rendering (with_sidecar).
 The roll's "With" and "Also in the film" come from CREDITS.yaml (`@credits with`, `@credits also`).
 Check:     python3 scripts/cut.py --lint edl/<cut>.yaml  (sources, in/out inside each clip, no lines:/fix:)
+4K:        python3 scripts/cut.py --size 3840x2160 edl/<cut>.yaml <out.mp4>  draws the cards, captions, labels
+           and the roll natively at that size (the layout is in 1080p units, times H/1080) and reads the
+           footage from $UPSCALED, the upscaled spans `scripts/upscale.py film` writes, never a resize of the
+           originals; encoded HEVC 10-bit (VideoToolbox where ffmpeg has it, else x265).
 --no-sidecar renders a cut whose sidecar is missing with whisper's words (otherwise it stops).
 Fonts: Trebuchet MS Bold, Menlo, Apple Color Emoji, from macOS's system folders, or from $FONTS (a
 folder holding files of those names) wherever they are not; emoji only when a line has one. The
 subtitles need a font whose family name is "Trebuchet MS" (libass matches the name, not the file).
 The work folder of a render is deleted afterwards (--keep-tmp keeps it); segments are cached in
-$WORK/segcache, keyed by item, inputs and this script's bytes, and capped at 10 GB, oldest out.
-Every segment is rendered to one format (1920x1080, 30 fps, yuv420p, AAC 48 kHz stereo) so the
+$WORK/segcache (at --size WxH: $WORK/segcache-WxH, so one edition's renders never evict the
+other's), keyed by item, inputs and this script's bytes, and capped at 10 GB at 1080p and 10 GB times
+(H/1080) squared at a larger size (40 GB at 4K, beside the 1080p cache), oldest out.
+Every segment is rendered to one format (1920x1080, 30 fps, yuv420p, AAC 48 kHz stereo; at --size
+3840x2160 HEVC yuv420p10le) so the
 concat copies streams; the whole film then gets one two-pass loudnorm to -14 LUFS, -1 dBTP
 (YouTube). Vertical clips sit centred on Ink (#15171C), never stretched or cropped.
 Palette and type: 220 Labs brand.md (Ink, Paper, Mist; no other colour). Chapter cards after
@@ -63,7 +70,8 @@ def font_path(mac):
 FONT = font_path('/System/Library/Fonts/Supplemental/Trebuchet MS Bold.ttf')
 MONO = font_path('/System/Library/Fonts/Menlo.ttc')
 EMOJI = font_path('/System/Library/Fonts/Apple Color Emoji.ttc')  # loaded only when a line has emoji
-CACHE_CAP = 10 * 2 ** 30  # the segment cache, oldest segments out past this (a cold film is ~1.5 GB)
+CACHE_CAP = 10 * 2 ** 30  # the segment cache at 1080p, oldest segments out past this (a cold film is ~1.5 GB;
+# times K squared at a larger --size, whose cache is its own folder: a 4K film is ~12 GB)
 with open(os.path.realpath(__file__), 'rb') as _f:
     SELF = hashlib.sha1(_f.read()).hexdigest()  # this script's bytes: part of every segment's cache key
 # the fonts in use, by path, size and mtime (the emoji font is ~180 MB: not read), also in every key
@@ -85,12 +93,49 @@ def need_fonts():
                              f'and "{os.path.basename(MONO)}" (and "{os.path.basename(EMOJI)}" for emoji)')
 INK, PAPER, MIST = '0x15171C', '0xFFFFFF', '0xA9ADB6'
 W, H, FPS = 1920, 1080, 30
+# The layout is drawn in 1080p units: every margin, font size and blur box below is in pixels of a
+# 1920x1080 frame, and px() scales it to the frame being rendered (--size), so a 4K cut draws its text
+# at 4K rather than resizing a 1080p picture. The ASS captions keep PlayRes 1920x1080; libass scales them,
+# the box (Outline) too only with ScaledBorderAndShadow: without it the 4K box was 144 px tall, not 172.
+DW, DH = 1920, 1080
+K = 1.0
+PIXF = 'yuv420p'  # the pixel format every segment's filter chain ends in
+UPSCALED = ''     # --size other than 1080p: the folder of upscaled spans, from $UPSCALED
+
+
+def px(v):
+    return int(round(v * K))
+
+
 RENDER_VERSION = {'clip': '3', 'card': '2', 'machine': '3', 'freeze': '1', 'roll': '1'}
 MIN_CUE = 1.0     # a wrapped piece shorter than this joins its neighbour (no flicker)
 MIN_SLIVER = 0.4  # a cue left this short by an item's in or out point is dropped, not flashed
 LABEL_SIZE = 40   # the clock: clip labels and machine-card times (the one-clock device)
-ENC = ['-c:v', 'libx264', '-preset', 'veryfast', '-crf', '19', '-pix_fmt', 'yuv420p', '-r', str(FPS),
-       '-c:a', 'aac', '-b:a', '256k', '-ar', '48000', '-ac', '2']
+AENC = ['-c:a', 'aac', '-b:a', '256k', '-ar', '48000', '-ac', '2']
+ENC = ['-c:v', 'libx264', '-preset', 'veryfast', '-crf', '19', '-pix_fmt', 'yuv420p', '-r', str(FPS), *AENC]
+
+
+def set_size(spec):
+    """--size WxH: the frame, the layout's scale, and for anything above 1080p the HEVC 10-bit encode
+    and the upscaled footage. 16:9 only, so the 1080p layout scales without moving anything."""
+    global W, H, K, PIXF, ENC, UPSCALED
+    m = re.fullmatch(r'(\d+)x(\d+)', spec or '')
+    if not m or int(m.group(1)) * 9 != int(m.group(2)) * 16 or int(m.group(2)) % 2:
+        raise SystemExit(f'cut: --size {spec!r}: give a 16:9 size such as 3840x2160')
+    W, H = int(m.group(1)), int(m.group(2)); K = H / DH
+    if H < DH:
+        raise SystemExit(f'cut: --size {spec}: 1080p or larger (a smaller proxy is a resize of the 1080p cut)')
+    if H == DH:
+        return
+    UPSCALED = need_dir('UPSCALED', f'the upscaled spans for a {W}x{H} cut (scripts/upscale.py film)')
+    PIXF = 'yuv420p10le'
+    encs = subprocess.run(['ffmpeg', '-hide_banner', '-encoders'], capture_output=True, text=True).stdout
+    if os.environ.get('CUT_HEVC', 'videotoolbox' if 'hevc_videotoolbox' in encs else 'x265') == 'videotoolbox':
+        # about 80 Mbit/s at 4K30: YouTube re-encodes whatever it gets; this keeps the 10-bit grade clean
+        v = ['-c:v', 'hevc_videotoolbox', '-profile:v', 'main10', '-pix_fmt', 'p010le', '-b:v', f'{int(80 * K * K / 4)}M']
+    else:
+        v = ['-c:v', 'libx265', '-preset', 'medium', '-crf', '16', '-pix_fmt', 'yuv420p10le', '-x265-params', 'log-level=error']
+    ENC = [*v, '-tag:v', 'hvc1', '-r', str(FPS), *AENC]
 
 
 def sec(v):
@@ -114,6 +159,45 @@ def find_src(clip):
 
 def src(clip):
     return find_src(clip) or sys.exit(f'cut: no source for {clip} in {INCOMING}')
+
+
+SPAN = re.compile(r'(.+)@(\d+\.\d+)-(\d+\.\d+|end)\.mov')
+
+
+def footage_ranges(edl):
+    """(clip, a, b) for every piece of footage a cut list reads, exactly as footage() is asked for it:
+    a clip's in..out, a freeze's one frame. scripts/upscale.py film upscales these ranges."""
+    for it in edl:
+        if 'clip' in it:
+            yield it['clip'], sec(it.get('in', 0)), sec(it['out'])
+        elif 'freeze' in it:
+            at = sec(it.get('at', 0))
+            yield it['freeze'], at, at + 1 / FPS
+
+
+def seg_cache():
+    """The segment cache of this frame size: one folder per edition, each under its own cap, so
+    rendering the 1080p and the 4K cut in turn never prunes the other's segments."""
+    return os.path.join(WORK, 'segcache' if H == DH else f'segcache-{W}x{H}')
+
+
+def footage(clip, a, b):
+    """(file, seek) for clip time a..b: the original at 1080p; at a larger --size the upscaled span in
+    $UPSCALED that holds a..b (`<clip>@<start>-<end>.mov`, its first frame at <start> of the clip), so
+    the seek is a - start. A span that runs to the clip's last frame is named `-end` and holds any b, as
+    the original does when a list's out passes the clip's end. No span is an error, never a quiet
+    fall-back to the 1080p original; two spans that both hold a..b are an error too (one is left from
+    another plan or recipe), never a choice by name."""
+    if not UPSCALED:
+        return src(clip), a
+    hits = [(f, float(m.group(2))) for f, m in ((f, SPAN.fullmatch(f)) for f in sorted(os.listdir(UPSCALED)))
+            if m and m.group(1) == clip and float(m.group(2)) <= a + 1e-3 and (m.group(3) == 'end' or b <= float(m.group(3)) + 1e-3)]
+    if len(hits) > 1:
+        sys.exit(f'cut: {len(hits)} upscaled spans of {clip} hold {a:.3f}-{b:.3f} in {UPSCALED} ({", ".join(f for f, _ in hits)}); '
+                 'move the stale ones aside (scripts/upscale.py film names them)')
+    if hits:
+        return os.path.join(UPSCALED, hits[0][0]), a - hits[0][1]
+    sys.exit(f'cut: no upscaled span of {clip} holds {a:.3f}-{b:.3f} in {UPSCALED}; run scripts/upscale.py film')
 
 
 def run(cmd):
@@ -208,8 +292,9 @@ def ass_time(t):
 def write_ass(path, subs):
     head = f"""[Script Info]
 ScriptType: v4.00+
-PlayResX: {W}
-PlayResY: {H}
+ScaledBorderAndShadow: yes
+PlayResX: {DW}
+PlayResY: {DH}
 WrapStyle: 0
 
 [V4+ Styles]
@@ -281,7 +366,11 @@ def grade_filter():
     if name not in looks:
         raise SystemExit(f'cut: release/look.yaml picks grade {name!r}, which is not under looks')
     # `{looks}` in a chain is release/looks/ (LUT files live there, as text), wherever the checkout is
-    return str(looks[name]).replace('{looks}', esc_path(os.path.join(HERE, '..', 'release', 'looks')))
+    chain = str(looks[name]).replace('{looks}', esc_path(os.path.join(HERE, '..', 'release', 'looks')))
+    # a chain is written for 1080p, like the layout: at a larger --size an unsharp kernel grows with the
+    # frame (odd, at most 23, ffmpeg's limit), so the grade sharpens the same detail rather than finer
+    return re.sub(r'unsharp=(\d+):(\d+)', lambda m: 'unsharp=' + ':'.join(
+        str(min(23, (int(round(int(n) * K)) - 1) // 2 * 2 + 1)) for n in m.groups()), chain) if K != 1 else chain
 
 
 def track_cmds(tr, a, d, path):
@@ -290,7 +379,7 @@ def track_cmds(tr, a, d, path):
     pixels, made by a face tracker. One box, sized to the largest face times `pad`, follows the samples
     frame by frame (linear between samples); across a gap longer than `gap` seconds (the face is out of
     shot) the box is parked off-frame. Writes an ffmpeg sendcmd file; returns (box w, box h, path)."""
-    pts = sorted(json.load(open(os.path.join(WORK, tr['file']))))
+    pts = sorted([p[0], *(v * K for v in p[1:5])] for p in json.load(open(os.path.join(WORK, tr['file']))))
     pad = float(tr.get('pad', 1.6)); gap = float(tr.get('gap', 1.0))
     bw = min(W, int(max(p[3] for p in pts) * pad) // 2 * 2); bh = min(H, int(max(p[4] for p in pts) * pad) // 2 * 2)
     lines = []
@@ -336,13 +425,13 @@ def render_clip(it, out, tmp):
     clip = it['clip']; a = sec(it.get('in', 0)); b = sec(it['out']); d = b - a
     subs = clip_subs(it)
     graph = [f'[0:v]scale={W}:{H}:force_original_aspect_ratio=decrease,pad={W}:{H}:(ow-iw)/2:(oh-ih)/2:color={INK},'
-             f'setsar=1,fps={FPS},format=yuv420p[b0]']
+             f'setsar=1,fps={FPS},format={PIXF}[b0]']
     cur = 'b0'
     for i, (t0, t1, x, y, w, h) in enumerate(it.get('blur') or []):
-        t0 = sec(t0) - a; t1 = sec(t1) - a
+        t0 = sec(t0) - a; t1 = sec(t1) - a; x, y, w, h = (px(v) for v in (x, y, w, h))
         graph.append(f'[{cur}]split[m{i}][c{i}]')
-        graph.append(f'[c{i}]crop={int(w)}:{int(h)}:{int(x)}:{int(y)},boxblur=luma_radius=40:luma_power=3[k{i}]')
-        graph.append(f"[m{i}][k{i}]overlay=x={int(x)}:y={int(y)}:enable='between(t,{t0:.3f},{t1:.3f})'[b{i + 1}]")
+        graph.append(f'[c{i}]crop={w}:{h}:{x}:{y},boxblur=luma_radius={px(40)}:luma_power=3[k{i}]')
+        graph.append(f"[m{i}][k{i}]overlay=x={x}:y={y}:enable='between(t,{t0:.3f},{t1:.3f})'[b{i + 1}]")
         cur = f'b{i + 1}'
     tr = it.get('blur_track')
     if tr:
@@ -361,14 +450,15 @@ def render_clip(it, out, tmp):
     if it.get('label'):
         lf = os.path.join(tmp, os.path.basename(out) + '.label.txt')
         open(lf, 'w').write(it['label'])
-        post.append(f"drawtext=fontfile='{esc_path(MONO)}':textfile='{esc_path(lf)}':fontcolor={MIST}:fontsize={LABEL_SIZE}:"
-                    f"x=60:y=50:box=1:boxcolor={INK}@0.7:boxborderw=12")
-    graph.append(f'[{cur}]' + ','.join(post) + ',format=yuv420p[v]')
+        post.append(f"drawtext=fontfile='{esc_path(MONO)}':textfile='{esc_path(lf)}':fontcolor={MIST}:fontsize={px(LABEL_SIZE)}:"
+                    f"x={px(60)}:y={px(50)}:box=1:boxcolor={INK}@0.7:boxborderw={px(12)}")
+    graph.append(f'[{cur}]' + ','.join(post) + f',format={PIXF}[v]')
     g = float(it.get('gain', 0))
     vc = voice_filter()
     af = (f'aresample=48000,{vc + "," if vc else ""}volume={g}dB,afade=t=in:d=0.04,'
           f'afade=t=out:st={max(d - 0.04, 0):.3f}:d=0.04')
-    run(['ffmpeg', '-v', 'error', '-y', '-ss', f'{a:.3f}', '-t', f'{d:.3f}', '-i', src(clip),
+    path, seek = footage(clip, a, b)
+    run(['ffmpeg', '-v', 'error', '-y', '-ss', f'{seek:.6f}', '-t', f'{d:.3f}', '-i', path,
          '-f', 'lavfi', '-t', f'{d:.3f}', '-i', 'anullsrc=r=48000:cl=stereo',
          '-filter_complex', ';'.join(graph) + f';[0:a]{af}[a0];[a0][1:a]amix=inputs=2:duration=first:normalize=0[a]',
          '-map', '[v]', '-map', '[a]', '-t', f'{d:.3f}', *ENC, out])
@@ -392,37 +482,37 @@ def audio_bed(music, dur):
 def text_card(out, tmp, lines, dur, size=84, font=FONT, color=PAPER, align='center', small=None, music=None):
     """lines: list of strings, one drawtext each, centred block."""
     vf = [f'color=c={INK}:s={W}x{H}:r={FPS}:d={dur}']
-    n = len(lines); lh = int(size * 1.35); top = (H - n * lh) // 2
+    n = len(lines); lh = int(size * 1.35); top = (H - n * lh) // 2  # size is in frame pixels already
     filt = []
     for i, line in enumerate(lines):
         if not line.strip():
             continue  # a blank line keeps its place in the block, nothing is drawn
         tf = os.path.join(tmp, f'{os.path.basename(out)}.{i}.txt')
         open(tf, 'w').write(line)
-        x = '(w-text_w)/2' if align == 'center' else '180'
+        x = '(w-text_w)/2' if align == 'center' else str(px(180))
         filt.append(f"drawtext=fontfile='{esc_path(font)}':textfile='{esc_path(tf)}':fontcolor={color}:fontsize={size}:"
                     f'x={x}:y={top + i * lh}')
     if small:
         tf = os.path.join(tmp, f'{os.path.basename(out)}.small.txt')
         open(tf, 'w').write(small)
-        filt.append(f"drawtext=fontfile='{esc_path(MONO)}':textfile='{esc_path(tf)}':fontcolor={MIST}:fontsize=30:"
-                    f'x=(w-text_w)/2:y=h-120')
+        filt.append(f"drawtext=fontfile='{esc_path(MONO)}':textfile='{esc_path(tf)}':fontcolor={MIST}:fontsize={px(30)}:"
+                    f'x=(w-text_w)/2:y=h-{px(120)}')
     chain = ','.join(filt) if filt else 'null'
     ain, af = audio_bed(music, dur)
     run(['ffmpeg', '-v', 'error', '-y', '-f', 'lavfi', '-i', vf[0], *ain,
-         '-filter_complex', f'[0:v]{chain},format=yuv420p[v];{af}',
+         '-filter_complex', f'[0:v]{chain},format={PIXF}[v];{af}',
          '-map', '[v]', '-map', '[a]', '-t', str(dur), *ENC, out])
 
 
 def render_card(it, out, tmp):
     kind = it.get('kind', 'chapter'); dur = float(it.get('dur', 3))
     lines = str(it['card']).upper().split('\n') if kind != 'plain' else str(it['card']).split('\n')
-    size = int(it.get('size', {'title': 260, 'chapter': 78, 'plain': 64}[kind]))
+    size = px(int(it.get('size', {'title': 260, 'chapter': 78, 'plain': 64}[kind])))
     # never wider than the frame less its margins: shrink the whole card to its longest line
     from PIL import ImageFont
     widest = max((ImageFont.truetype(FONT, size).getlength(l) for l in lines if l.strip()), default=0)
-    if widest > W - 240:
-        size = int(size * (W - 240) / widest)
+    if widest > W - px(240):
+        size = int(size * (W - px(240)) / widest)
     text_card(out, tmp, lines, dur, size=size, small=it.get('small'), music=it.get('music'))
 
 
@@ -453,7 +543,7 @@ def credit_logo(name):
     path = os.path.join(WORK, ent['file'])
     if not os.path.exists(path):
         raise SystemExit(f'cut: logo {name} is switched on in release/credits.yaml but {path} is missing')
-    im = Image.open(path).convert('RGBA'); h = int(ent.get('height', 140))
+    im = Image.open(path).convert('RGBA'); h = px(int(ent.get('height', 140)))
     return im.resize((max(1, int(im.width * h / im.height)), h)), h
 
 
@@ -503,19 +593,19 @@ def render_machine(it, out, tmp):
     reveal step (Pillow, so emoji keep their colour), held for its share of the duration."""
     from PIL import Image, ImageDraw, ImageFont
     entries = it['machine']; dur = float(it.get('dur', 2.5 * len(entries) + 1))
-    size = int(it.get('size', 46)); hsize = max(int(size * 0.6), LABEL_SIZE); gap = 34
+    size = px(int(it.get('size', 46))); hsize = max(int(size * 0.6), px(LABEL_SIZE)); gap = px(34)
     mono = ImageFont.truetype(MONO, size); monoh = ImageFont.truetype(MONO, hsize)
-    srcf = ImageFont.truetype(MONO, 26)
+    srcf = ImageFont.truetype(MONO, px(26))
     rgb = lambda c: tuple(int(c[k:k + 2], 16) for k in (2, 4, 6))
     blocks = []
     for e in entries:
         head = f"{e.get('t', '')}  {e.get('who', '')}".strip()
-        blocks.append((head, wrap(str(e['text']), int(it.get('wrap', int(1500 / (size * 0.6)))))))
+        blocks.append((head, wrap(str(e['text']), int(it.get('wrap', int(px(1500) / (size * 0.6)))))))
     height = lambda hs: sum(int(hs * 1.5) + len(ls) * int(size * 1.4) for _, ls in blocks) + gap * (len(blocks) - 1)
-    if height(hsize) > H - 180:  # a full card keeps its clock at the old ratio rather than run into the source line
+    if height(hsize) > H - px(180):  # a full card keeps its clock at the old ratio rather than run into the source line
         hsize = int(size * 0.6); monoh = ImageFont.truetype(MONO, hsize)
     total = height(hsize)
-    y0 = max((H - total) // 2, 70)
+    y0 = max((H - total) // 2, px(70))
     lst = os.path.join(tmp, os.path.basename(out) + '.frames.txt')
     lead = 0.3; step = (dur - lead) / len(blocks)
     with open(lst, 'w') as f:
@@ -523,14 +613,14 @@ def render_machine(it, out, tmp):
             im = Image.new('RGB', (W, H), rgb(INK)); d = ImageDraw.Draw(im)
             y = y0
             for i, (head, ls) in enumerate(blocks[:k]):
-                d.text((180, y), head, font=monoh, fill=rgb(MIST)); y += int(hsize * 1.5)
+                d.text((px(180), y), head, font=monoh, fill=rgb(MIST)); y += int(hsize * 1.5)
                 for ln in ls:
-                    _draw_runs(im, d, 180, y, ln, mono, size, rgb(PAPER)); y += int(size * 1.4)
+                    _draw_runs(im, d, px(180), y, ln, mono, size, rgb(PAPER)); y += int(size * 1.4)
                 y += gap
             if it.get('source'):
-                d.text((180, H - 90), it['source'], font=srcf, fill=rgb(MIST))
+                d.text((px(180), H - px(90)), it['source'], font=srcf, fill=rgb(MIST))
             if (it.get('music') or {}).get('credit'):  # its own line: beside the source it ran off the frame
-                d.text((180, H - 130), it['music']['credit'], font=srcf, fill=rgb(MIST))
+                d.text((px(180), H - px(130)), it['music']['credit'], font=srcf, fill=rgb(MIST))
             png = os.path.join(tmp, f'{os.path.basename(out)}.{k}.png')
             im.save(png)
             hold = lead if k == 0 else step
@@ -538,7 +628,7 @@ def render_machine(it, out, tmp):
         f.write(f"file '{png}'\n")  # the concat demuxer drops the last duration otherwise
     ain, af = audio_bed(it.get('music'), dur)
     run(['ffmpeg', '-v', 'error', '-y', '-f', 'concat', '-safe', '0', '-i', lst, *ain,
-         '-filter_complex', f'[0:v]fps={FPS},format=yuv420p[v];{af}', '-map', '[v]', '-map', '[a]',
+         '-filter_complex', f'[0:v]fps={FPS},format={PIXF}[v];{af}', '-map', '[v]', '-map', '[a]',
          '-t', str(dur), *ENC, out])
 
 
@@ -547,7 +637,8 @@ def render_roll(it, out, tmp):
     emoji kept), moved up through the frame at a steady speed over `dur` seconds."""
     from PIL import Image, ImageDraw, ImageFont
     rgb = lambda c: tuple(int(c[k:k + 2], 16) for k in (2, 4, 6))
-    head = ImageFont.truetype(FONT, 54); body = ImageFont.truetype(MONO, 36); note = ImageFont.truetype(MONO, 28)
+    hs, bs, ns = px(54), px(36), px(28)
+    head = ImageFont.truetype(FONT, hs); body = ImageFont.truetype(MONO, bs); note = ImageFont.truetype(MONO, ns)
     rows = []
     for line in it['roll']:
         line = str(line)
@@ -555,16 +646,16 @@ def render_roll(it, out, tmp):
             lg = credit_logo(line[6:].strip())
             if lg: rows.append(('i', lg[0], None, lg[1], None))
             continue
-        if line.startswith('# '): rows.append(('h', line[2:].upper(), head, 54, PAPER))
-        elif line.startswith('~ '): rows.append(('n', line[2:], note, 28, MIST))
-        elif not line.strip(): rows.append(('g', '', note, 28, INK))
-        else: rows.append(('b', line, body, 36, PAPER))
-    hgt = H + sum(r[3] + 40 if r[0] == 'i' else int(r[3] * (2.0 if r[0] == 'h' else 1.5)) for r in rows) + H // 2
+        if line.startswith('# '): rows.append(('h', line[2:].upper(), head, hs, PAPER))
+        elif line.startswith('~ '): rows.append(('n', line[2:], note, ns, MIST))
+        elif not line.strip(): rows.append(('g', '', note, ns, INK))
+        else: rows.append(('b', line, body, bs, PAPER))
+    hgt = H + sum(r[3] + px(40) if r[0] == 'i' else int(r[3] * (2.0 if r[0] == 'h' else 1.5)) for r in rows) + H // 2
     im = Image.new('RGB', (W, hgt), rgb(INK)); d = ImageDraw.Draw(im)
     y = H
     for k, text, font, size, color in rows:
         if k == 'i':
-            im.paste(text, (int((W - text.width) / 2), y), text); y += size + 40
+            im.paste(text, (int((W - text.width) / 2), y), text); y += size + px(40)
             continue
         if k == 'h': y += int(size * 0.5)
         if text:
@@ -575,21 +666,22 @@ def render_roll(it, out, tmp):
     dur = float(it.get('dur', 60)); travel = hgt - H
     run(['ffmpeg', '-v', 'error', '-y', '-f', 'lavfi', '-i', f'color=c={INK}:s={W}x{H}:r={FPS}:d={dur}',
          '-loop', '1', '-i', png, '-f', 'lavfi', '-t', str(dur), '-i', 'anullsrc=r=48000:cl=stereo',
-         '-filter_complex', f"[0:v][1:v]overlay=x=0:y='-{travel}*t/{dur}':shortest=1,format=yuv420p[v]",
+         '-filter_complex', f"[0:v][1:v]overlay=x=0:y='-{travel}*t/{dur}':shortest=1,format={PIXF}[v]",
          '-map', '[v]', '-map', '2:a', '-t', str(dur), *ENC, out])
 
 
 def render_freeze(it, out, tmp):
     clip = it['freeze']; at = sec(it.get('at', 0)); dur = float(it.get('dur', 2))
     png = os.path.join(tmp, os.path.basename(out) + '.png')
-    run(['ffmpeg', '-v', 'error', '-y', '-ss', f'{at:.3f}', '-i', src(clip), '-frames:v', '1',
+    path, seek = footage(clip, at, at + 1 / FPS)
+    run(['ffmpeg', '-v', 'error', '-y', '-ss', f'{seek:.6f}', '-i', path, '-frames:v', '1',
          '-vf', f'scale={W}:{H}:force_original_aspect_ratio=decrease,pad={W}:{H}:(ow-iw)/2:(oh-ih)/2:color={INK},setsar=1', png])
-    filt = 'format=yuv420p'
+    filt = f'format={PIXF}'
     if it.get('text'):
         tf = os.path.join(tmp, os.path.basename(out) + '.txt')
         open(tf, 'w').write(str(it['text']).upper())
-        filt = (f"drawtext=fontfile='{esc_path(FONT)}':textfile='{esc_path(tf)}':fontcolor={PAPER}:fontsize=72:"
-                f"x=(w-text_w)/2:y=h-200:box=1:boxcolor={INK}:boxborderw=24,format=yuv420p")
+        filt = (f"drawtext=fontfile='{esc_path(FONT)}':textfile='{esc_path(tf)}':fontcolor={PAPER}:fontsize={px(72)}:"
+                f"x=(w-text_w)/2:y=h-{px(200)}:box=1:boxcolor={INK}:boxborderw={px(24)},format={PIXF}")
     run(['ffmpeg', '-v', 'error', '-y', '-loop', '1', '-framerate', str(FPS), '-t', str(dur), '-i', png,
          '-f', 'lavfi', '-t', str(dur), '-i', 'anullsrc=r=48000:cl=stereo',
          '-filter_complex', f'[0:v]{filt}[v]', '-map', '[v]', '-map', '1:a', '-t', str(dur), *ENC, out])
@@ -776,13 +868,13 @@ def lint(edl_path):
 
 
 def prune_cache(cache, keep):
-    """Oldest segments out (by mtime; a cache hit touches its file) until the cache is under CACHE_CAP,
+    """Oldest segments out (by mtime; a cache hit touches its file) until the cache is under CACHE_CAP * K * K,
     never one this render used nor one touched in the last 6 h (another render may be using it)."""
     files = sorted((os.path.getmtime(p), os.path.getsize(p), p) for p in
                    (os.path.join(cache, f) for f in os.listdir(cache)) if os.path.isfile(p))
     total = sum(f[1] for f in files)
     for _, size, p in files:
-        if total <= CACHE_CAP:
+        if total <= CACHE_CAP * K * K:
             break
         if p not in keep and time.time() - os.path.getmtime(p) > 6 * 3600:
             os.remove(p); total -= size
@@ -793,6 +885,12 @@ def main(argv):
     keep = '--keep-tmp' in argv
     NO_SIDECAR = '--no-sidecar' in argv
     argv = [a for a in argv if a not in ('--keep-tmp', '--no-sidecar')]
+    if '--size' in argv:
+        i = argv.index('--size')
+        size = argv[i + 1] if i + 1 < len(argv) else ''
+        argv = argv[:i] + argv[i + 2:]
+        if argv[:1] not in (['--srt'], ['--lint']):  # captions and the lint do not depend on the frame
+            set_size(size)
     if len(argv) == 2 and argv[0] == '--lint':
         return lint(argv[1])
     if len(argv) not in (2, 3) or (len(argv) == 3) != (argv[0] == '--srt'):
@@ -819,10 +917,10 @@ def main(argv):
         m = json.loads(r.stderr[r.stderr.rindex('{'):r.stderr.rindex('}') + 1])
         ln = (f"loudnorm=I=-14:TP=-1:LRA=11:measured_I={m['input_i']}:measured_TP={m['input_tp']}:"
               f"measured_LRA={m['input_lra']}:measured_thresh={m['input_thresh']}:offset={m['target_offset']}:linear=true")
-        run(['ffmpeg', '-v', 'error', '-y', '-i', joined, '-c:v', 'copy', '-af', ln + ',aresample=48000',
-             '-c:a', 'aac', '-b:a', '256k', '-movflags', '+faststart', final])
+        run(['ffmpeg', '-v', 'error', '-y', '-i', joined, '-c:v', 'copy', *(['-tag:v', 'hvc1'] if H != DH else []),
+             '-af', ln + ',aresample=48000', '-c:a', 'aac', '-b:a', '256k', '-movflags', '+faststart', final])
         d = float(run(['ffprobe', '-v', 'error', '-show_entries', 'format=duration', '-of', 'csv=p=0', final]).stdout)
-        prune_cache(os.path.join(WORK, 'segcache'), set(segs))
+        prune_cache(seg_cache(), set(segs))
     finally:
         if not keep:
             shutil.rmtree(tmp, ignore_errors=True)  # a joined copy of the whole film; the segments stay cached
@@ -831,14 +929,14 @@ def main(argv):
 
 def render_all(edl, tmp):
     """Each item to one cached segment; returns their paths in order."""
-    cache = os.path.join(WORK, 'segcache'); os.makedirs(cache, exist_ok=True)
+    cache = seg_cache(); os.makedirs(cache, exist_ok=True)
     segs = []
     for n, it in enumerate(edl):
         # A segment is re-rendered only when its item, this script, or a file it reads has changed:
         # the key hashes all three (by content for the item, the script, the grade and voice chains and
         # release/credits.yaml; by mtime for the transcripts and music; by path, size and mtime for the
         # fonts). Not keyed: the LUT files under release/looks/, logo PNGs and voice-model files; after
-        # changing one, empty $WORK/segcache. Any edit to this script re-renders every segment, so
+        # changing one, empty the cache folder (seg_cache). Any edit to this script re-renders every segment, so
         # RENDER_VERSION is a label now, not a way to re-render one kind alone.
         deps = []
         c = it.get('clip')
@@ -862,7 +960,10 @@ def render_all(edl, tmp):
         kind = next((k for k in ('clip', 'card', 'machine', 'freeze', 'roll') if k in it), None)
         if not kind:
             raise SystemExit(f'cut: item {n} has no kind: {it}')
-        ver = RENDER_VERSION[kind].encode() + SELF.encode() + FONTKEY.encode()
+        ver = RENDER_VERSION[kind].encode() + SELF.encode() + FONTKEY.encode() + f'|{W}x{H}|{" ".join(ENC)}'.encode()
+        if UPSCALED and kind in ('clip', 'freeze'):
+            f, _ = footage(*next(footage_ranges([it])))
+            deps.append(f'{os.path.basename(f)}:{os.path.getsize(f)}:{os.path.getmtime(f)}')
         key = hashlib.sha1(ver + json.dumps(it, sort_keys=True, default=str).encode() + '|'.join(deps).encode()).hexdigest()[:16]
         out = os.path.join(cache, f'{key}.mp4')
         hit = os.path.exists(out)

@@ -164,6 +164,12 @@ jobs:
         with:
           name: ${{ inputs.artifact }}
           path: .youtube-input
+      # 220 only, not the pipeline's template: a published version is never altered, so a write from a branch whose
+      # youtube.yaml edits a frozen entry stops here (scripts/frozen.py; release/frozen.tsv names the entries). Before the
+      # state cache is restored and with --no-media: a CI checkout has no media, so apply sends no file anyway.
+      - name: published versions unchanged
+        if: env.VERB == 'apply' || env.VERB == 'upload'
+        run: python3 scripts/frozen.py --no-media || { echo "::error::a published version's entry was edited"; exit 1; }
       - name: restore the state file
         uses: actions/cache/restore@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
         with:

@@ -85,8 +85,7 @@ music is in the public domain, CC0 ([music/PROVENANCE.md](music/PROVENANCE.md)).
 
 - **Your credit.** Everyone who appears in the film can be listed in its credits. Open a pull
   request that adds or corrects your own line in [CREDITS.yaml](CREDITS.yaml), with your name
-  as you want it shown. A merged credit goes into the YouTube description and a pinned comment
-  the same day, and onto the roll at the next upload. To be removed or blurred instead, write to
+  as you want it shown. A merged credit goes into the next cut on YouTube. To be removed or blurred instead, write to
   the contact below; that is not a pull request.
 - **A first we missed.** [FIRSTS.md](FIRSTS.md) lists the nearest earlier films. Know one that beats
   our claim? Open a pull request that adds it, with a link; if it holds, the claim comes down.

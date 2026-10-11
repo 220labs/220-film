@@ -2,8 +2,8 @@
 # `@credits also` in a cut list's roll become the sections below (scripts/cut.py, with_credits).
 #
 # You appear in the film and want your credit added or corrected: open a pull request that changes
-# your own line, with your name as you want it shown. A merged credit goes into the YouTube
-# description and a pinned comment the same day, and onto the roll at the next upload.
+# your own line, with your name as you want it shown. A merged credit goes into the next cut on
+# YouTube.
 # To be removed or blurred instead, write to the contact in LICENSE.md; that is not a pull request.
 #
 # section: with  - the three friends the film follows, on one line
