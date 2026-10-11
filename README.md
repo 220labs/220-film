@@ -6,13 +6,19 @@
 
 220 is developed like software. The cut lists, the render scripts, the music prompts and the
 credits live here. Anyone can improve the code; a few trusted contributors edit the film itself,
-from review copies of the footage. On each day that `main` has new contributions, a new version
-premieres on the 220 YouTube channel at 11:11 PT.
+from review copies of the footage.
+
+Every push to `main` renders the film and its teaser, and both go up on the 220 YouTube
+channel, unlisted. At 05:55 PT the day's version is cut: the latest build from `main` becomes the
+next minor version, its teaser goes public and its film premieres at 11:11 PT. Anything that lands
+after 05:55 goes into the next day's version. Until the daily build runs, each version is cut by
+hand on the same clock.
 
 ## Where it stands
 
-v0.0 premiered on 2026-10-09. v0.1 premieres on Saturday 2026-10-10, and this is its recipe:
-the cut lists, the scripts, the music prompts and the credits.
+v0.0 premiered on 2026-10-09. v0.1 is this recipe, public and tagged since 2026-10-10: the cut
+lists, the scripts, the music prompts and the credits. Its film goes up once the build uploads
+it, which is not wired yet.
 
 ## What is here
 
@@ -88,10 +94,12 @@ music is in the public domain, CC0 ([music/PROVENANCE.md](music/PROVENANCE.md)).
 ## Roadmap
 
 - v0.0: premiered on 2026-10-09.
-- v0.1, Saturday 2026-10-10: the recipe and the credits, tagged at the first publish.
+- v0.1: the recipe and the credits, public and tagged since 2026-10-10; its film goes up once
+  the build uploads it.
 - Next: the making-of and the rough cut lists.
 - Next: review copies of the footage for trusted contributors.
-- Next: the daily build from `main`, one teaser and one premiere a day at most.
+- Next: the daily build from `main`: a teaser on every push, a version cut at 05:55 PT, its
+  premiere at 11:11 PT.
 - 1.0: a checklist, not a date.
 
 The full list is in [ROADMAP.md](ROADMAP.md).
