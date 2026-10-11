@@ -18,8 +18,10 @@ tsv=$out/clips.tsv
 for f in "$in"/*.MOV "$in"/*.mov "$in"/*.MP4 "$in"/*.mp4; do
   [ -f "$f" ] || continue
   c=$(basename "$f"); c=${c%.*}
-  a=$(stat -L -f %z "$f"); sleep 1; b=$(stat -L -f %z "$f")
-  [ "$a" = "$b" ] || { echo "skip $c (still exporting)"; continue; }
+  # wc -c follows symlinks and behaves the same on macOS and Linux (BSD `stat -f %z` fails on GNU stat)
+  a=$(wc -c < "$f" | tr -d ' '); sleep 1; b=$(wc -c < "$f" | tr -d ' ')
+  # No pipefail in sh: an unreadable file gives two empty sizes, which must not count as finished.
+  [ -n "$a" ] && [ "$a" = "$b" ] || { echo "skip $c (still exporting or unreadable)"; continue; }
   if ! grep -q "^$c	" "$tsv"; then
     j=$(ffprobe -v error -print_format json -show_format -show_streams "$f")
     printf '%s' "$j" | python3 -c '
