@@ -464,19 +464,27 @@ def render_clip(it, out, tmp):
          '-map', '[v]', '-map', '[a]', '-t', f'{d:.3f}', *ENC, out])
 
 
-def audio_bed(music, dur):
+def audio_bed(music, dur, input_idx=1):
     """The audio of a card: silence, or a music bed (`music: {file, at, gain, fade, credit}`, the file
-    relative to $WORK, never under talk: only cards and machine cards take one). Returns the input
-    arguments for ffmpeg's second input and the filter that turns it into [a]."""
+    relative to $WORK, never under talk: only cards, machine cards and the roll take one). Returns the
+    input arguments for ffmpeg's music input and the filter that turns it into [a]."""
     if not music:
-        return ['-f', 'lavfi', '-t', str(dur), '-i', 'anullsrc=r=48000:cl=stereo'], '[1:a]anull[a]'
+        return ['-f', 'lavfi', '-t', str(dur), '-i', 'anullsrc=r=48000:cl=stereo'], f'[{input_idx}:a]anull[a]'
     at = sec(music.get('at', 0)); g = float(music.get('gain', 0)); fd = float(music.get('fade', 0.25))
+    fi = float(music.get('fade_in', fd)); fo = float(music.get('fade_out', fd))
     path = os.path.join(WORK, music['file'])
     if not os.path.exists(path):
         raise SystemExit(f'cut: no music file {path}')
-    af = (f'[1:a]aresample=48000,aformat=channel_layouts=stereo,volume={g}dB,apad,atrim=0:{dur},'
-          f'afade=t=in:d={fd},afade=t=out:st={max(dur - fd, 0):.3f}:d={fd}[a]')
-    return ['-ss', f'{at:.3f}', '-t', str(dur), '-i', path], af
+    fades = []
+    if fi > 0:
+        fades.append(f'afade=t=in:st=0:d={fi:.3f}')
+    if fo > 0:
+        fades.append(f'afade=t=out:st={max(dur - fo, 0):.3f}:d={fo:.3f}')
+    fade_chain = (',' + ','.join(fades)) if fades else ''
+    af = (f'[{input_idx}:a]aresample=48000,aformat=channel_layouts=stereo,'
+          f'atrim=start={at:.4f}:end={at + dur:.4f},asetpts=PTS-STARTPTS,'
+          f'volume={g}dB,apad,atrim=0:{dur}{fade_chain}[a]')
+    return ['-i', path], af
 
 
 def text_card(out, tmp, lines, dur, size=84, font=FONT, color=PAPER, align='center', small=None, music=None):
@@ -664,10 +672,11 @@ def render_roll(it, out, tmp):
         y += int(size * (1.5 if k == 'h' else 1.5))
     png = os.path.join(tmp, os.path.basename(out) + '.roll.png'); im.save(png)
     dur = float(it.get('dur', 60)); travel = hgt - H
+    ain, af = audio_bed(it.get('music'), dur, input_idx=2)
     run(['ffmpeg', '-v', 'error', '-y', '-f', 'lavfi', '-i', f'color=c={INK}:s={W}x{H}:r={FPS}:d={dur}',
-         '-loop', '1', '-i', png, '-f', 'lavfi', '-t', str(dur), '-i', 'anullsrc=r=48000:cl=stereo',
-         '-filter_complex', f"[0:v][1:v]overlay=x=0:y='-{travel}*t/{dur}':shortest=1,format={PIXF}[v]",
-         '-map', '[v]', '-map', '2:a', '-t', str(dur), *ENC, out])
+         '-loop', '1', '-i', png, *ain,
+         '-filter_complex', f"[0:v][1:v]overlay=x=0:y='-{travel}*t/{dur}':shortest=1,format={PIXF}[v];{af}",
+         '-map', '[v]', '-map', '[a]', '-t', str(dur), *ENC, out])
 
 
 def render_freeze(it, out, tmp):
@@ -831,8 +840,22 @@ def with_credits(edl):
     return edl
 
 
+def with_continuous_music(edl):
+    """When two adjacent items play the same music file continuously (`at_next == at_prev + dur_prev`),
+    suppress the tail fade-out on the first and the head fade-in on the second so the music plays
+    across the splice without dipping."""
+    for i in range(len(edl) - 1):
+        m0 = edl[i].get('music'); m1 = edl[i + 1].get('music')
+        if m0 and m1 and m0.get('file') == m1.get('file'):
+            end0 = sec(m0.get('at', 0)) + item_dur(edl[i])
+            if abs(sec(m1.get('at', 0)) - end0) < 0.05:
+                m0.setdefault('fade_out', 0.0)
+                m1.setdefault('fade_in', 0.0)
+    return edl
+
+
 def load(edl_path):
-    return with_credits(with_sidecar(yaml.safe_load(open(edl_path)), edl_path))
+    return with_continuous_music(with_credits(with_sidecar(yaml.safe_load(open(edl_path)), edl_path)))
 
 
 def lint(edl_path):

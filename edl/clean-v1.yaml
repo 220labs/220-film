@@ -132,7 +132,7 @@
   dur: 8
   size: 52
   source: "_personal dreams/2026-10-07.md · verbatim"
-  music: {file: music/music-C-waiting-v1-t1.m4a, at: 1.00, gain: -0.8, credit: "♪ AI-generated stand-in · Google Flow Music"}
+  music: {file: music/music-B-outage-v1-t1.m4a, at: 8.00, gain: -4.5, credit: "♪ AI-generated stand-in · Google Flow Music"}
 - machine:
     - {t: "10:31", who: "Ilya", text: "I don't see anything on desktop 5, can you check?"}
     - {t: "10:40", who: "Ilya", text: "any updates?"}
@@ -143,7 +143,7 @@
   dur: 17
   size: 40
   source: "laptop session transcripts and autofinish log · verbatim"
-  music: {file: music/music-B-outage-v1-t1.m4a, at: 8.00, gain: -4.5, credit: "♪ AI-generated stand-in · Google Flow Music"}
+  music: {file: music/music-B-outage-v1-t1.m4a, at: 16.00, gain: -4.5, credit: "♪ AI-generated stand-in · Google Flow Music"}
 # ---------- CHAPTER THREE ----------
 - card: "Chapter three\nin which everyone is selling something"
   dur: 3.5
@@ -154,7 +154,7 @@
     - {t: "11:29", who: "Claude", text: "Nothing on this side can send it."}
   dur: 10
   source: "_coding@ef43739, laptop session transcript · verbatim"
-  music: {file: music/music-B-outage-v1-t1.m4a, at: 25.00, gain: -4.5, credit: "♪ AI-generated stand-in · Google Flow Music"}
+  music: {file: music/music-B-outage-v1-t1.m4a, at: 33.00, gain: -4.5, credit: "♪ AI-generated stand-in · Google Flow Music"}
 - clip: video-8854_singular_display
   in: 58
   out: 101
@@ -527,3 +527,4 @@
     - ""
     - "# ffpp.pictures/220"
   dur: 60
+  music: {file: music/music-F-made-v1-t1.m4a, at: 35.00, gain: -5.2, fade: 2.0}

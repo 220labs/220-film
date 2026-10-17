@@ -54,14 +54,14 @@
     - {t: "01:00", who: "a session", text: "ILYA, IT'S FINE — THIS SESSION IS REALLY DONE. YOU HAVEN'T FORGOTTEN ANYTHING."}
   dur: 4
   source: "laptop session transcripts and autofinish log · 2026-10-08 · verbatim"
-  music: {file: music/music-E-sleep-v1-t1.m4a, at: 1.00, gain: -4.8, credit: "♪ AI-generated stand-in · Google Flow Music"}
+  music: {file: music/music-D-breaker-v1-t1.m4a, at: 5.50, gain: -5.2, credit: "♪ AI-generated stand-in · Google Flow Music"}
 - machine:
     - {t: "15:24:22", who: "Ilya", text: "I have exactly 2 minutes to present"}
     - {t: "15:24:28", who: "builder", text: "Two-minute version."}
   dur: 5
   size: 64
   source: "builder session transcript · verbatim"
-  music: {file: music/music-D-breaker-v1-t1.m4a, at: 5.50, gain: -5.2, credit: "♪ AI-generated stand-in · Google Flow Music"}
+  music: {file: music/music-D-breaker-v1-t1.m4a, at: 9.50, gain: -5.2, credit: "♪ AI-generated stand-in · Google Flow Music"}
 - clip: IMG_5842
   in: 250.0
   out: 254.5
