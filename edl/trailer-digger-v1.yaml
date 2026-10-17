@@ -1,0 +1,258 @@
+# 220 — Official Trailer (Inarritu "Digger" / Netflix Satirical Thriller Cut).
+# Continuous musical pulse across rapid cuts, axial punch-ins, freeze-frame stamps,
+# three-beat satirical title stabs ("A WORKSHOP. A LAPTOP. A MELTDOWN." / "SHIP. OR SLEEP."),
+# and a hard silence drop on the climax.
+
+# ---------- MOVEMENT I: THE CATHEDRAL & THE CLOUD ----------
+- clip: IMG_5781
+  in: 8.90
+  out: 16.62
+  label: "10:31"
+  music: {file: music/music-B-outage-v1-t1.m4a, at: 30.00, gain: -7.5, fade_in: 0.4, credit: "♪ AI-generated stand-in · Google Flow Music"}
+- card: "NO MIGRATION PLANS."
+  kind: chapter
+  dur: 0.85
+  size: 118
+  bg: "0xFFFFFF"
+  color: "0x15171C"
+  music: {file: music/music-B-outage-v1-t1.m4a, at: 37.72, gain: -2.0}
+- clip: IMG_5779
+  in: 123.50
+  out: 127.80
+  zoom: 1.12
+  label: "10:29"
+  music: {file: music/music-B-outage-v1-t1.m4a, at: 38.57, gain: -6.5}
+- clip: IMG_5780
+  in: 0.00
+  out: 2.20
+  zoom: 1.22
+  label: "10:31"
+  music: {file: music/music-B-outage-v1-t1.m4a, at: 42.87, gain: -6.5}
+- clip: IMG_5785
+  in: 42.10
+  out: 47.64
+  label: "10:47"
+  music: {file: music/music-B-outage-v1-t1.m4a, at: 45.07, gain: -7.5, fade_out: 0.15}
+
+# ---------- MOVEMENT II: THE CRACK IN THE GLACIER ----------
+- machine:
+    - {t: "09:29", who: "dispatch", text: "… nobody is watching, so decide from the brief and do not ask."}
+  dur: 1.90
+  size: 56
+  source: "dispatch preamble · 2026-10-08 · verbatim"
+  music: {file: music/music-S-stings-v2-t1.m4a, at: 12.00, gain: -0.8, fade: 0.15}
+- clip: IMG_5813
+  in: 102.30
+  out: 105.30
+  label: "13:27"
+  music: {file: music/music-C-waiting-v1-t1.m4a, at: 44.00, gain: -6.5, fade_in: 0.15}
+- clip: IMG_5813
+  in: 110.50
+  out: 112.70
+  zoom: 1.24
+  label: "13:27"
+  music: {file: music/music-C-waiting-v1-t1.m4a, at: 47.00, gain: -6.5}
+- freeze: IMG_5813
+  at: 112.60
+  dur: 1.10
+  zoom: 1.34
+  size: 82
+  boxcolor: "0xE50914"
+  text: "AGENT NOT RUNNING"
+  music: {file: music/music-C-waiting-v1-t1.m4a, at: 49.20, gain: -1.5}
+- clip: IMG_5814
+  in: 289.70
+  out: 293.90
+  zoom: 1.15
+  label: "13:41"
+  music: {file: music/music-C-waiting-v1-t1.m4a, at: 50.30, gain: -7.0}
+- clip: IMG_5814
+  in: 471.54
+  out: 476.10
+  zoom: 1.28
+  label: "13:44"
+  music: {file: music/music-C-waiting-v1-t1.m4a, at: 54.50, gain: -7.0}
+- card: "A WORKSHOP."
+  kind: chapter
+  dur: 0.85
+  size: 132
+  bg: "0xE50914"
+  color: "0xFFFFFF"
+  music: {file: music/music-C-waiting-v1-t1.m4a, at: 59.06, gain: -1.5}
+- clip: IMG_5832
+  in: 6.32
+  out: 11.36
+  label: "14:23"
+  music: {file: music/music-C-waiting-v1-t1.m4a, at: 59.91, gain: -7.0}
+- card: "A LAPTOP."
+  kind: chapter
+  dur: 0.85
+  size: 132
+  bg: "0xE50914"
+  color: "0xFFFFFF"
+  music: {file: music/music-C-waiting-v1-t1.m4a, at: 64.95, gain: -1.5}
+- clip: video-8635_singular_display
+  in: 89.10
+  out: 92.02
+  label: "09:16"
+  music: {file: music/music-C-waiting-v1-t1.m4a, at: 65.80, gain: -7.0}
+- clip: video-8635_singular_display
+  in: 99.20
+  out: 100.28
+  zoom: 1.28
+  label: "09:16"
+  music: {file: music/music-C-waiting-v1-t1.m4a, at: 68.72, gain: -6.0, fade_out: 0.1}
+- card: "A MELTDOWN."
+  kind: chapter
+  dur: 1.05
+  size: 142
+  bg: "0xFFFFFF"
+  color: "0x15171C"
+  music: {file: music/music-S-stings-v2-t1.m4a, at: 35.00, gain: -0.5, fade: 0.15}
+
+# ---------- MOVEMENT III: BARON MUNCHAUSEN & THE HEIST ----------
+- clip: IMG_5771
+  in: 11.00
+  out: 19.20
+  zoom: 1.10
+  label: "10:14"
+  music: {file: music/music-D-breaker-v1-t1.m4a, at: 0.50, gain: -8.5, fade_in: 0.15}
+- clip: IMG_5813
+  in: 121.10
+  out: 127.95
+  zoom: 1.30
+  label: "13:27"
+  music: {file: music/music-D-breaker-v1-t1.m4a, at: 8.70, gain: -8.5}
+- clip: IMG_5808
+  in: 0.00
+  out: 4.84
+  zoom: 1.15
+  label: "13:09"
+  music: {file: music/music-D-breaker-v1-t1.m4a, at: 15.55, gain: -8.5}
+- clip: IMG_5838
+  in: 8.88
+  out: 14.86
+  zoom: 1.22
+  label: "14:57"
+  music: {file: music/music-D-breaker-v1-t1.m4a, at: 20.39, gain: -8.5}
+- clip: IMG_5804
+  in: 18.00
+  out: 21.00
+  zoom: 1.18
+  label: "12:14"
+  music: {file: music/music-D-breaker-v1-t1.m4a, at: 26.37, gain: -8.5}
+- clip: IMG_5804
+  in: 280.00
+  out: 287.00
+  zoom: 1.32
+  label: "12:18"
+  music: {file: music/music-D-breaker-v1-t1.m4a, at: 29.37, gain: -8.5}
+- machine:
+    - {t: "14:59", who: "README", text: "built as a joke during a Google AI event. The joke is that it works"}
+  dur: 2.20
+  size: 54
+  source: "builder session transcript · verbatim"
+  music: {file: music/music-D-breaker-v1-t1.m4a, at: 36.37, gain: -2.5}
+
+# ---------- MOVEMENT IV: THE PANIC MONTAGE ----------
+- clip: IMG_5839
+  in: 54.90
+  out: 59.80
+  zoom: 1.15
+  label: "15:24"
+  music: {file: music/music-D-breaker-v1-t1.m4a, at: 38.57, gain: -8.0}
+- clip: IMG_5839
+  in: 109.80
+  out: 113.80
+  zoom: 1.32
+  label: "15:24"
+  music: {file: music/music-D-breaker-v1-t1.m4a, at: 43.47, gain: -8.0}
+- machine:
+    - {t: "15:08:14", who: "Ilya", text: "merge yourself!"}
+    - {t: "15:08:54", who: "builder", text: "🚢 Merged."}
+  dur: 1.80
+  size: 64
+  source: "builder session transcript · verbatim"
+  music: {file: music/music-D-breaker-v1-t1.m4a, at: 47.47, gain: -2.0}
+- clip: IMG_5838
+  in: 39.40
+  out: 43.12
+  zoom: 1.25
+  label: "14:57"
+  music: {file: music/music-D-breaker-v1-t1.m4a, at: 49.27, gain: -8.0}
+- machine:
+    - {t: "15:24:22", who: "Ilya", text: "I have exactly 2 minutes to present"}
+    - {t: "15:24:28", who: "builder", text: "Two-minute version."}
+  dur: 1.90
+  size: 64
+  source: "builder session transcript · verbatim"
+  music: {file: music/music-D-breaker-v1-t1.m4a, at: 52.99, gain: -2.0}
+- clip: IMG_5840
+  in: 5.12
+  out: 9.12
+  zoom: 1.15
+  subs_file: mc0/IMG_5840.json
+  label: "15:27"
+  music: {file: music/music-D-breaker-v1-t1.m4a, at: 54.89, gain: -7.5}
+- clip: IMG_5840
+  in: 22.12
+  out: 25.12
+  zoom: 1.32
+  subs_file: mc0/IMG_5840.json
+  label: "15:27"
+  music: {file: music/music-D-breaker-v1-t1.m4a, at: 58.89, gain: -7.5}
+- clip: IMG_5842
+  in: 251.20
+  out: 253.80
+  zoom: 1.20
+  subs_file: mc0/IMG_5842.json
+  label: "15:48"
+  music: {file: music/music-D-breaker-v1-t1.m4a, at: 61.89, gain: -7.5}
+- freeze: IMG_5842
+  at: 253.50
+  dur: 0.95
+  zoom: 1.35
+  size: 84
+  boxcolor: "0xE50914"
+  text: "2 MINUTES ON STAGE"
+  music: {file: music/music-D-breaker-v1-t1.m4a, at: 64.49, gain: -1.5, fade_out: 0.08}
+
+# ---------- MOVEMENT V: DEAD SILENCE DROP & THE DIGGER STING ----------
+- clip: IMG_5842
+  in: 437.48
+  out: 447.34
+  zoom: 1.24
+  subs_file: mc0/IMG_5842.json
+  label: "15:50"
+- card: "SHIP. OR SLEEP."
+  kind: chapter
+  dur: 1.10
+  size: 138
+  bg: "0xE50914"
+  color: "0xFFFFFF"
+  music: {file: music/music-S-stings-v2-t1.m4a, at: 47.00, gain: -0.5, fade_in: 0.05}
+- machine:
+    - {t: "16:30", who: "autofinish", text: "API Error: Your computer went to sleep mid-response."}
+  dur: 2.40
+  size: 52
+  source: "autofinish log · verbatim"
+  music: {file: music/music-S-stings-v2-t1.m4a, at: 48.10, gain: -0.5}
+- clip: IMG_5814
+  in: 546.22
+  out: 550.30
+  zoom: 1.18
+  label: "13:45"
+  music: {file: music/music-S-stings-v2-t1.m4a, at: 50.50, gain: -7.5, fade_out: 0.15}
+- card: "220"
+  kind: title
+  dur: 2.40
+  music: {file: music/music-S-stings-v2-t1.m4a, at: 74.00, gain: -0.5, fade_in: 0.1}
+- card: "AN AI AUTOBIOGRAPHY"
+  kind: chapter
+  small: "A workshop. A laptop. 53 agents. Edited by the AI in it."
+  dur: 3.20
+  music: {file: music/music-S-stings-v2-t1.m4a, at: 76.40, gain: -0.5}
+- card: "Directed by Ilya Fomin · Zhan Petrov · Claude Opus 5.5\nShot at Google's Gemini at Work '26 · NASA Hangar One\n220labs.dev · github.com/220labs/220-film"
+  kind: plain
+  dur: 3.80
+  music: {file: music/music-S-stings-v2-t1.m4a, at: 79.60, gain: -0.5, fade_out: 0.8}

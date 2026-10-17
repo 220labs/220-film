@@ -424,8 +424,10 @@ def render_clip(it, out, tmp):
     times of the clip: a face of someone who has not agreed to be in the film (brief rule 4)."""
     clip = it['clip']; a = sec(it.get('in', 0)); b = sec(it['out']); d = b - a
     subs = clip_subs(it)
-    graph = [f'[0:v]scale={W}:{H}:force_original_aspect_ratio=decrease,pad={W}:{H}:(ow-iw)/2:(oh-ih)/2:color={INK},'
-             f'setsar=1,fps={FPS},format={PIXF}[b0]']
+    zm = float(it.get('zoom', 1.0))
+    zfilt = f',scale=iw*{zm:.4f}:ih*{zm:.4f},crop={W}:{H}:(iw-{W})/2:(ih-{H})/2' if zm > 1.001 else ''
+    graph = [f'[0:v]scale={W}:{H}:force_original_aspect_ratio=decrease,pad={W}:{H}:(ow-iw)/2:(oh-ih)/2:color={INK}'
+             f'{zfilt},setsar=1,fps={FPS},format={PIXF}[b0]']
     cur = 'b0'
     for i, (t0, t1, x, y, w, h) in enumerate(it.get('blur') or []):
         t0 = sec(t0) - a; t1 = sec(t1) - a; x, y, w, h = (px(v) for v in (x, y, w, h))
@@ -458,9 +460,11 @@ def render_clip(it, out, tmp):
     af = (f'aresample=48000,{vc + "," if vc else ""}volume={g}dB,afade=t=in:d=0.04,'
           f'afade=t=out:st={max(d - 0.04, 0):.3f}:d=0.04')
     path, seek = footage(clip, a, b)
+    ain, mb = audio_bed(it.get('music'), d, input_idx=1)
+    mb_bed = mb[:-3] + '[abed]'
     run(['ffmpeg', '-v', 'error', '-y', '-ss', f'{seek:.6f}', '-t', f'{d:.3f}', '-i', path,
-         '-f', 'lavfi', '-t', f'{d:.3f}', '-i', 'anullsrc=r=48000:cl=stereo',
-         '-filter_complex', ';'.join(graph) + f';[0:a]{af}[a0];[a0][1:a]amix=inputs=2:duration=first:normalize=0[a]',
+         *ain,
+         '-filter_complex', ';'.join(graph) + f';[0:a]{af}[a0];{mb_bed};[a0][abed]amix=inputs=2:duration=first:normalize=0[a]',
          '-map', '[v]', '-map', '[a]', '-t', f'{d:.3f}', *ENC, out])
 
 
@@ -487,9 +491,9 @@ def audio_bed(music, dur, input_idx=1):
     return ['-i', path], af
 
 
-def text_card(out, tmp, lines, dur, size=84, font=FONT, color=PAPER, align='center', small=None, music=None):
+def text_card(out, tmp, lines, dur, size=84, font=FONT, color=PAPER, bg=INK, align='center', small=None, music=None):
     """lines: list of strings, one drawtext each, centred block."""
-    vf = [f'color=c={INK}:s={W}x{H}:r={FPS}:d={dur}']
+    vf = [f'color=c={bg}:s={W}x{H}:r={FPS}:d={dur}']
     n = len(lines); lh = int(size * 1.35); top = (H - n * lh) // 2  # size is in frame pixels already
     filt = []
     for i, line in enumerate(lines):
@@ -521,7 +525,8 @@ def render_card(it, out, tmp):
     widest = max((ImageFont.truetype(FONT, size).getlength(l) for l in lines if l.strip()), default=0)
     if widest > W - px(240):
         size = int(size * (W - px(240)) / widest)
-    text_card(out, tmp, lines, dur, size=size, small=it.get('small'), music=it.get('music'))
+    text_card(out, tmp, lines, dur, size=size, color=it.get('color', PAPER), bg=it.get('bg', INK),
+              small=it.get('small'), music=it.get('music'))
 
 
 def wrap(t, n):
@@ -683,17 +688,23 @@ def render_freeze(it, out, tmp):
     clip = it['freeze']; at = sec(it.get('at', 0)); dur = float(it.get('dur', 2))
     png = os.path.join(tmp, os.path.basename(out) + '.png')
     path, seek = footage(clip, at, at + 1 / FPS)
+    zm = float(it.get('zoom', 1.0))
+    zfilt = f',scale=iw*{zm:.4f}:ih*{zm:.4f},crop={W}:{H}:(iw-{W})/2:(ih-{H})/2' if zm > 1.001 else ''
+    gf = f',{grade_filter()}' if grade_filter() else ''
     run(['ffmpeg', '-v', 'error', '-y', '-ss', f'{seek:.6f}', '-i', path, '-frames:v', '1',
-         '-vf', f'scale={W}:{H}:force_original_aspect_ratio=decrease,pad={W}:{H}:(ow-iw)/2:(oh-ih)/2:color={INK},setsar=1', png])
+         '-vf', f'scale={W}:{H}:force_original_aspect_ratio=decrease,pad={W}:{H}:(ow-iw)/2:(oh-ih)/2:color={INK}{zfilt},setsar=1{gf}', png])
     filt = f'format={PIXF}'
     if it.get('text'):
         tf = os.path.join(tmp, os.path.basename(out) + '.txt')
         open(tf, 'w').write(str(it['text']).upper())
-        filt = (f"drawtext=fontfile='{esc_path(FONT)}':textfile='{esc_path(tf)}':fontcolor={PAPER}:fontsize={px(72)}:"
-                f"x=(w-text_w)/2:y=h-{px(200)}:box=1:boxcolor={INK}:boxborderw={px(24)},format={PIXF}")
+        bc = it.get('boxcolor', INK)
+        fs = px(int(it.get('size', 72)))
+        filt = (f"drawtext=fontfile='{esc_path(FONT)}':textfile='{esc_path(tf)}':fontcolor={PAPER}:fontsize={fs}:"
+                f"x=(w-text_w)/2:y=h-{px(200)}:box=1:boxcolor={bc}:boxborderw={px(24)},format={PIXF}")
+    ain, af = audio_bed(it.get('music'), dur, input_idx=1)
     run(['ffmpeg', '-v', 'error', '-y', '-loop', '1', '-framerate', str(FPS), '-t', str(dur), '-i', png,
-         '-f', 'lavfi', '-t', str(dur), '-i', 'anullsrc=r=48000:cl=stereo',
-         '-filter_complex', f'[0:v]{filt}[v]', '-map', '[v]', '-map', '1:a', '-t', str(dur), *ENC, out])
+         *ain,
+         '-filter_complex', f'[0:v]{filt}[v];{af}', '-map', '[v]', '-map', '[a]', '-t', str(dur), *ENC, out])
 
 
 # ---- YouTube captions (--srt): renders nothing, walks the EDL on the film's timeline ----

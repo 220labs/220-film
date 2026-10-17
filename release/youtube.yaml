@@ -178,3 +178,43 @@ videos:
     thumbnail: cuts/220-trailer-zhan-thumb.jpg
     captions: {en: cuts/220-trailer-zhan-netflix.en.srt}
 
+  trailer-digger-v1:
+    title: "220 — Official Trailer (Digger Cut): A Workshop. A Laptop. A Meltdown."
+    description: |
+      A WORKSHOP. A LAPTOP. A MELTDOWN.
+      SHIP. OR SLEEP.
+
+      Inside Hangar One at NASA's Moffett Field — an airship cathedral so vast a cloud once formed inside it, and a building that still has no migration plans — 55 engineers gather for a flagship Google AI workshop. On the arena screen, the future of autonomous agents is effortless. On the workshop floor, the Wi-Fi drops, the lab is yesterday's copy-paste tutorial, and nobody can get their agent running.
+
+      Cut in the percussive, black-comedy thriller rhythm of Alejandro G. Iñárritu's Digger, this Netflix-standard documentary trailer pits corporate AI spectacle against raw floor meltdown — as three outsiders (Ilya Fomin, cinematographer Zhan Petrov, and cybersecurity researcher Bogdan Barchuk) go rogue in 29 minutes to build a two-file circuit breaker called "220" before the podium countdown hits zero... and the laptop goes to sleep mid-response.
+
+      TRAILER MOVEMENTS
+      0:00 I. The Cathedral & The Cloud ("No Migration Plans")
+      0:28 II. The Crack in the Glacier ("Did You Get Your Agent Running?")
+      0:45 III. A Workshop. A Laptop. A Meltdown.
+      1:03 IV. Baron Munchausen & The 29-Minute Heist
+      1:34 V. Two Minutes on Stage ("Look Me in the Eyes")
+      2:07 VI. Ship. Or Sleep. ("API Error: Your Computer Went to Sleep Mid-Response")
+
+      Watch the full film (v0.1): https://youtu.be/XKJ-gWXQKVU
+      220 Labs: https://220labs.dev/
+      Open-source recipe, EDL & credits (MIT): https://github.com/220labs/220-film
+      Film page: https://ffpp.pictures/220/
+
+      CREDITS
+      With: Ilya Fomin, Zhan Petrov and Bogdan Barchuk.
+      Also in the film: Sara Emmett, who made the coffee, and Gina, brand ambassador.
+      Directed and produced by: Ilya Fomin, Zhan Petrov and Claude Opus 5.5 (Anthropic).
+      Director of photography: Zhan Petrov.
+      Edited by: Claude Opus 5.5 (Anthropic) — Digger / Netflix high-drama trailer cut (edl/trailer-digger-v1.yaml).
+      Music: Continuous percussive underscore (Google Flow Music, CC0).
+
+      LICENCE
+      The film, its footage, faces, voices and the words spoken in it are (c) 2026 the filmmakers and the people in it. All rights reserved. No reuse, no remix, no re-upload, no use as data for training, fine-tuning or evaluating any machine-learning model, and no synthetic likeness or voice made from it. Keynote excerpts are (c) Google, quoted for commentary. Permission requests: hello@ffpp.pictures.
+
+      #220 #DiggerCut #NetflixDocumentary #AIAgents #ZhanPetrov #ClaudeCode #OpenSource
+    tags: ["220", 220 film, Digger trailer style, Inarritu style trailer, Zhan Petrov, documentary trailer, Netflix documentary, open-source film, AI autobiography, AI documentary, documentary edited by AI, Google Gemini workshop, NASA Ames, Hangar One, AI agents, Claude Code, 220labs]
+    privacy: unlisted
+    synthetic: true
+    thumbnail: cuts/220-trailer-digger-thumb.jpg
+    captions: {en: cuts/220-trailer-digger-netflix.en.srt}
