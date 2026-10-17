@@ -164,6 +164,17 @@ jobs:
         with:
           name: ${{ inputs.artifact }}
           path: .youtube-input
+      - name: the video file from a release tag
+        if: env.VERB == 'upload' && env.ARTIFACT == ''
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          if [ -n "$FILE" ] && [ ! -f "$FILE" ] && [ -n "$KEY" ]; then
+            dir="$(dirname "$FILE")"
+            mkdir -p "$dir"
+            gh release download "$KEY" --repo "$GITHUB_REPOSITORY" --dir "$dir" --clobber
+          fi
       # 220 only, not the pipeline's template: a published version is never altered, so a write from a branch whose
       # youtube.yaml edits a frozen entry stops here (scripts/frozen.py; release/frozen.tsv names the entries). Before the
       # state cache is restored and with --no-media: a CI checkout has no media, so apply sends no file anyway.

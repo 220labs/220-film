@@ -135,3 +135,46 @@ videos:
     synthetic: true
     thumbnail: r1/release/220-teaser-thumb-v0.1.jpg
     captions: {en: r1/release/220-teaser-v0.1-22dda3b.en.srt}
+  trailer-zhan-v1:
+    id:
+    file: cuts/220-trailer-zhan-netflix.mp4       # cut.py edl/trailer-zhan-v1.yaml at 11bd1ce
+    title: "220 | Official Trailer (Zhan Petrov Cut) | An AI Autobiography"
+    description: |
+      "You're the middleman." — What happens when a filmmaker, an engineer, and 53 autonomous AI agents walk into NASA Ames Hangar One?
+
+      An aggressive, high-velocity Netflix-style documentary trailer for 220, cut in the signature style of director of photography and co-director Zhan Petrov.
+
+      Shot on two phones and a pair of camera glasses on 2026-10-08 at Hangar One, NASA Ames Research Center, during Google's Gemini at Work workshop. While the room teaches developers to copy and paste code from a browser tab, Zhan Petrov challenges Google engineers on the floor, Bogdan Barchuk debates the human-in-the-loop bottleneck, and Ilya Fomin's autonomous Claude agents quietly build a working 220-volt circuit breaker in 29 minutes—and then edit the film itself.
+
+      The AI in the film is real. Nothing in the footage is staged, and the agents' lines appear verbatim with their real timestamps.
+
+      TRAILER CHAPTERS
+      0:00 Cold Open: "You're the Middleman"
+      0:27 Inside Hangar One: The Hype vs. The Floor
+      0:59 The Friction: "Yesterday's Day" & The Copy-Paste Lab
+      1:39 The Escalation: 29 Minutes to Build the 220 Breaker
+      2:15 Climax: An Open-Source Film About AI, Edited by AI
+
+      Watch the full film (v0.1): https://youtu.be/XKJ-gWXQKVU
+      220 Labs: https://220labs.dev/
+      Open-source recipe, EDL & credits (MIT): https://github.com/220labs/220-film
+      Film page: https://ffpp.pictures/220/
+
+      CREDITS
+      With: Ilya Fomin, Zhan Petrov and Bogdan Barchuk.
+      Also in the film: Sara Emmett, who made the coffee, and Gina, brand ambassador.
+      Directed and produced by: Ilya Fomin, Zhan Petrov and Claude Opus 5.5 (Anthropic).
+      Director of photography: Zhan Petrov.
+      Edited by: Claude Opus 5.5 (Anthropic) — Zhan Petrov aggressive Netflix-doc trailer cut (edl/trailer-zhan-v1.yaml).
+      Music: AI-generated stand-ins, Google Flow Music (CC0), continuous stem mix.
+
+      LICENCE
+      The film, its footage, faces, voices and the words spoken in it are (c) 2026 the filmmakers and the people in it. All rights reserved. No reuse, no remix, no re-upload, no use as data for training, fine-tuning or evaluating any machine-learning model, and no synthetic likeness or voice made from it. Keynote excerpts are (c) Google, quoted for commentary. Permission requests: hello@ffpp.pictures.
+
+      #220 #ZhanPetrov #AIAgents #Documentary #Trailer #ClaudeCode #OpenSource
+    tags: ["220", 220 film, Zhan Petrov, documentary trailer, Netflix documentary style, open-source film, AI autobiography, AI documentary, documentary edited by AI, Google Gemini workshop, Gemini at Work, NASA Ames, Hangar One, AI agents, Claude Code, 220labs]
+    privacy: unlisted
+    synthetic: true
+    thumbnail: cuts/220-trailer-zhan-thumb.jpg
+    captions: {en: cuts/220-trailer-zhan-netflix.en.srt}
+
