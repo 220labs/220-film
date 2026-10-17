@@ -1,0 +1,164 @@
+# 220 — Trailer (Zhan Petrov cut: aggressive, dynamic, Netflix documentary style).
+# Machine lines are verbatim from the agents' sessions of 2026-10-08, each with its real time.
+
+# ---------- ACT I: COLD OPEN — PLUGGED INTO MY HEAD ----------
+- machine:
+    - {t: "09:29", who: "dispatch", text: "… nobody is watching, so decide from the brief and do not ask."}
+  dur: 2.8
+  size: 56
+  source: "dispatch preamble · 2026-10-08 · verbatim"
+  music: {file: music/music-S-stings-v2-t1.m4a, at: 23.0, gain: -0.5, fade: 0.25, credit: "♪ AI-generated stand-in · Google Flow Music"}
+- clip: video-8635_singular_display
+  in: 23.0
+  out: 28.1
+  label: "09:15"
+- clip: video-8635_singular_display
+  in: 89.0
+  out: 92.1
+  label: "09:16"
+- clip: video-8635_singular_display
+  in: 99.2
+  out: 100.3
+  label: "09:16"
+- clip: video-8635_singular_display
+  in: 133.0
+  out: 137.2
+  label: "09:17"
+- clip: IMG_5771
+  in: 11.0
+  out: 19.2
+  label: "10:14"
+
+# ---------- ACT II: THE GIANT VS. THE REBELS ----------
+- card: "OCTOBER 8, 2026\nNASA AMES · HANGAR ONE"
+  kind: chapter
+  dur: 2.2
+  music: {file: music/music-S-stings-v2-t1.m4a, at: 35.0, gain: -0.5, fade: 0.3}
+- clip: IMG_5779
+  in: 123.5
+  out: 127.8
+  label: "10:29"
+- clip: IMG_5780
+  in: 0
+  out: 3.0
+  label: "10:31"
+- clip: IMG_5781
+  in: 0
+  out: 5.0
+  label: "10:31"
+- clip: IMG_5813
+  in: 102.3
+  out: 105.3
+  label: "13:27"
+- clip: IMG_5813
+  in: 110.5
+  out: 112.7
+  label: "13:27"
+- clip: IMG_5813
+  in: 121.1
+  out: 127.95
+  label: "13:27"
+- clip: IMG_5814
+  in: 471.5
+  out: 477.6
+  label: "13:44"
+
+# ---------- ACT III: ZHAN'S VISION — FIVE AGENTS, ZERO FRICTION ----------
+- card: "53 SESSIONS RUNNING\nZERO HUMANS WATCHING"
+  kind: chapter
+  dur: 2.2
+  music: {file: music/music-S-stings-v2-t1.m4a, at: 47.0, gain: -0.5, fade: 0.3}
+- clip: IMG_5808
+  in: 0.0
+  out: 10.74
+  label: "13:09"
+- clip: IMG_5838
+  in: 13.4
+  out: 21.46
+  label: "14:57"
+- clip: video-8861_singular_display
+  in: 8.94
+  out: 17.70
+  label: "13:33"
+- clip: IMG_5804
+  in: 18.0
+  out: 21.0
+  label: "12:14"
+- clip: IMG_5804
+  in: 280.0
+  out: 287.0
+  label: "12:18"
+
+# ---------- ACT IV: 29 MINUTES TO BREAK THE SYSTEM ----------
+- card: "29 MINUTES TO BUILD\n2 MINUTES ON STAGE"
+  kind: chapter
+  dur: 2.2
+  music: {file: music/music-S-stings-v2-t1.m4a, at: 59.0, gain: -0.5, fade: 0.3}
+- clip: IMG_5839
+  in: 54.9
+  out: 60.8
+  label: "15:24"
+- clip: IMG_5839
+  in: 74.8
+  out: 80.8
+  label: "15:24"
+- machine:
+    - {t: "14:59", who: "README", text: "built as a joke during a Google AI event. The joke is that it works"}
+    - {t: "15:08:14", who: "Ilya", text: "merge yourself!"}
+    - {t: "15:08:54", who: "builder", text: "🚢 Merged."}
+  dur: 3.5
+  size: 46
+  source: "builder session transcript · verbatim"
+  music: {file: music/music-D-breaker-v1-t1.m4a, at: 0.50, gain: -4.0, credit: "♪ AI-generated stand-in · Google Flow Music"}
+- machine:
+    - {t: "15:24:22", who: "Ilya", text: "I have exactly 2 minutes to present"}
+    - {t: "15:24:28", who: "builder", text: "Two-minute version."}
+  dur: 3.0
+  size: 64
+  source: "builder session transcript · verbatim"
+  music: {file: music/music-D-breaker-v1-t1.m4a, at: 4.00, gain: -4.0, credit: "♪ AI-generated stand-in · Google Flow Music"}
+- clip: IMG_5838
+  in: 39.4
+  out: 43.12
+  label: "14:57"
+- clip: IMG_5842
+  in: 251.2
+  out: 254.0
+  subs_file: mc0/IMG_5842.json
+  label: "15:48"
+- clip: IMG_5842
+  in: 437.48
+  out: 447.34
+  subs_file: mc0/IMG_5842.json
+  label: "15:50"
+- clip: IMG_5842
+  in: 576.80
+  out: 581.40
+  subs_file: mc0/IMG_5842.json
+  label: "15:53"
+
+# ---------- ACT V: FINALE & TITLE STING ----------
+- clip: IMG_5814
+  in: 546.2
+  out: 552.2
+  label: "13:45"
+- machine:
+    - {t: "16:30", who: "autofinish", text: "API Error: Your computer went to sleep mid-response."}
+    - {t: "21:46", who: "Ilya", text: "We need to launch tonight to YouTube"}
+  dur: 3.5
+  size: 48
+  source: "autofinish log & film session · verbatim"
+  music: {file: music/music-D-breaker-v1-t1.m4a, at: 50.50, gain: -4.0, credit: "♪ AI-generated stand-in · Google Flow Music"}
+- card: "220"
+  kind: title
+  dur: 2.5
+  music: {file: music/music-S-stings-v2-t1.m4a, at: 2.5, gain: -0.5, fade: 0.4}
+- card: "AN AI AUTOBIOGRAPHY"
+  kind: chapter
+  small: "A film about AI, edited by AI. The AI in it is real."
+  dur: 3.5
+  music: {file: music/music-S-stings-v2-t1.m4a, at: 83.5, gain: -0.5, fade: 0.4}
+- card: "Directed by Ilya Fomin, Zhan Petrov & Claude Opus 5.5\nShot at Google's Gemini at Work '26 · NASA Hangar One\n220labs.dev · github.com/220labs/220-film"
+  kind: plain
+  dur: 4.5
+  music: {file: music/music-S-stings-v2-t1.m4a, at: 86.25, gain: -0.5, fade: 0.5}
