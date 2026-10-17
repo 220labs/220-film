@@ -136,7 +136,7 @@ videos:
     thumbnail: r1/release/220-teaser-thumb-v0.1.jpg
     captions: {en: r1/release/220-teaser-v0.1-22dda3b.en.srt}
   trailer-zhan-v1:
-    id:
+    id: Szess6bjxfA
     file: cuts/220-trailer-zhan-netflix.mp4       # cut.py edl/trailer-zhan-v1.yaml at 11bd1ce
     title: "220 | Official Trailer (Zhan Petrov Cut) | An AI Autobiography"
     description: |
